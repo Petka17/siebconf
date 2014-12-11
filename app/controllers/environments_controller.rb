@@ -2,7 +2,7 @@ class EnvironmentsController < ApplicationController
   
   ENV_TMPL = "Environment Templates"
 
-  before_filter :get_environments, only: [:index, :show, :new, :edit, :edit_order]
+  before_filter :get_environments, only: [:index, :show, :new, :edit, :edit_order, :edit_server_roles]
   before_filter :get_environment,  only: [:show, :edit, :update, :destroy, :edit_server_roles, :update_server_roles]
 
   def index
