@@ -1,0 +1,14 @@
+tr
+  td
+    = "#{label}:"
+  td
+    - if value.class == Array
+      table.table_for_heading
+        - value.each do |v|
+          tr
+            td
+              strong.pull-right
+                = v
+    - else
+      span.pull-right
+        = value

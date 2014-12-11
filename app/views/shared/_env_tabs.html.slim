@@ -1,0 +1,8 @@
+ul.nav.nav-tabs.margin-bottom-10
+  - env_list.each do |env|
+    li role="presentation"
+      = link_to env, "#"
+
+  li role="presentation"
+    a href="#" 
+      span.glyphicon.glyphicon-plus aria-hidden="true"

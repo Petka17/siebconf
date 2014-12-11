@@ -1,0 +1,25 @@
+- provide :header_env, "true"
+
+.row
+  .col-md-4.col-md-offset-4
+
+    h2.text-center Edit environment
+
+    = form_for @environment, html: { class: "form-horizontal", role: "form" } do |f|
+
+      .form-group.form-group-sm
+        = f.label :name, "Environment Name:", class: "col-sm-5"
+          p.text-right Environment Name:
+        .col-sm-7
+          = f.text_field :name, class: "form-control", placeholder: "E.g. Develop 1"
+
+      .form-group.form-group-sm
+        = f.label :last_sync_date, "Last Sync Date:", class: "col-sm-5"
+          p.text-right Last Sync Date:
+        .col-sm-7
+          = f.date_field :last_sync_date, class: "form-control"
+
+      = f.submit "Update", class: "btn btn-lg btn-primary btn-block"
+.row
+  .col-md-12
+    = link_to "Destroy", environment_path(@environment), class: "btn btn-default btn-xs margin-1", method: :delete

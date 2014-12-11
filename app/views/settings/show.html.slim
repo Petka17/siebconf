@@ -1,0 +1,19 @@
+- provide :header_env, "true"
+
+.row
+  .well
+    = link_to "Add new template", new_setting_setting_value_path(@setting), class: "btn btn-default btn-xs"
+
+- if @setting[:values]
+  .row
+    table.table.table-hover
+      - @setting[:values].each do |v|
+        tr
+          td.col-sm-2
+            = v[:name]
+          td.col.sm-8
+            = text_area_tag "setting_value[source]", JSON.pretty_generate(v[:source]), class: "form-control", rows: "30", readonly: true
+          td.col.sm-1
+            = link_to "Edit", "/settings/#{@setting.id}/setting_values/#{v[:name]}/edit", class: "btn btn-default btn-xs"
+          td.col.sm-1
+            = link_to "Delete", "/settings/#{@setting.id}/setting_values/#{v[:name]}", class: "btn btn-default btn-xs", method: :delete

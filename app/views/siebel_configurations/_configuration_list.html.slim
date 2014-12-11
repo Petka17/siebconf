@@ -1,0 +1,18 @@
+ul.nav.nav-pills.nav-stacked
+  - if siebel_configurations
+    - siebel_configurations.each do |config|
+
+      - if selected_conf.id == config.id
+        - cl="active"
+      - else
+        - cl=""
+
+      li class="#{cl}"
+        a href="#{environment_siebel_configuration_path(selected_env, config)}"
+          table.table_for_heading
+            tr
+              td
+                = "#{config.version} #{config.description}"
+              td
+                .pull-right
+                  = "#{config.status}"

@@ -1,0 +1,39 @@
+= render partial: 'provide_variables', locals: { environment: @environment }
+
+= render partial: 'environments/env_tabs', locals: { env_list: @environments, selected_env: @environment }
+
+.row
+  .well
+    .row
+      .col-md-4
+        table
+          tr
+            td
+              = button_to "Pull", new_environment_siebel_configuration_path(@environment), method: :get, class: "form-control", form_class: "form-inline"
+            td
+              = button_to "Push", new_environment_siebel_configuration_path(@environment), method: :get, class: "form-control", form_class: "form-inline"
+            td
+              = button_to "Validate", new_environment_siebel_configuration_path(@environment), method: :get, class: "form-control", form_class: "form-inline"
+      .col-md-8
+        - if @environment.last_sync_date
+          p.text-right
+            = @environment.last_sync_date.strftime("Last Sync Date: %d.%m.%Y %H:%M") 
+
+.row
+  .col-md-3
+    h5 Commit List
+    #configuration_list
+      = render partial: 'configuration_list', locals: { siebel_configurations: @siebel_configurations, selected_conf: @siebel_configuration, selected_env: @environment }
+
+  .col-md-9
+
+    .row
+      .col-md-6
+        h5 Object Index
+        #objects
+
+      .col-md-6
+        h5 Object Details
+        #object_desc
+
+= javascript_include_tag "get_objects_list"

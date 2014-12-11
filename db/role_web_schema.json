@@ -1,0 +1,20 @@
+{
+  "_id": "WebRole",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "parameters": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "SWEPath": {
+          "type": "string",
+          "required": true
+        }
+      }
+    }
+  }
+}

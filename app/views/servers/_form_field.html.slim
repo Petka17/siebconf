@@ -1,0 +1,6 @@
+.form-group.form-group-sm
+  = label_tag "#{field}", "#{label}", class: "col-sm-5"
+    p.text-right
+      = label
+  .col-sm-7
+    = text_field_tag "#{field}", "#{value}", class: "form-control"

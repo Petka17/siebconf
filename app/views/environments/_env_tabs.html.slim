@@ -1,0 +1,17 @@
+.row
+  #env_tabs
+    ul.nav.nav-tabs.margin-bottom-10
+      - env_list.each do |env|
+        - if env.id == selected_env.id
+          li.active
+            = link_to selected_env.name, env
+        - else
+          li
+            - if yield(:environment_tab) == "config"
+              = link_to env.name, environment_siebel_configurations_path(env)
+            - else
+              = link_to env.name, env
+
+      li
+        = link_to new_environment_path 
+          span.glyphicon.glyphicon-plus aria-hidden="true"

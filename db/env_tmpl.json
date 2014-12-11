@@ -1,0 +1,212 @@
+{
+  "name": "Environment Templates",
+  "values": [
+    {
+      "name": "SBL81 Win Oracle11g",
+      "source": {
+        "server_roles": [
+          {
+            "name": "Database",
+            "parameters": {
+              "vendor": "Oracle",
+              "version": "11.2.0",
+              "db_name": "siebeldb",
+              "user": "siebel",
+              "password": "siebel"
+            },
+            "assoc": true
+          },
+          {
+            "name": "Filesystem",
+            "parameters": {},
+            "assoc": true
+          },
+          {
+            "name": "Siebel Gateway",
+            "parameters": {
+              "version": "8.1.1.11",
+              "enterprise": "SBA_82"
+            },
+            "assoc": true
+          },
+          {
+            "name": "Web",
+            "parameters": {
+              "vendor": "IIS",
+              "version": "7.5"
+            },
+            "assoc": true
+          },
+          {
+            "name": "Siebel Server",
+            "parameters": {},
+            "assoc": true
+          },
+          {
+            "name": "Siebel Tools",
+            "parameters": {},
+            "assoc": false
+          }
+        ],
+        "servers": [
+          {
+            "name": "sbl81srvr01",
+            "domain": "siebel.local",
+            "ip": "10.10.10.61",
+            "ram": "4Gb",
+            "cpu": "Intel 1.6HGz",
+            "hdd": "40Gb",
+            "os": "Win2k8r2_en",
+            "java": {
+              "version": "1.6.1",
+              "home_dir": "c:\\program files\\java"
+            },
+            "oracle_client": {
+              "version": "11.2.0",
+              "home_dir": "c:\\app\\product\\11.2.0"
+            },
+            "server_roles": [
+              {
+                "name": "Filesystem",
+                "parameters": {
+                  "path": "c:\\siebel\\fs"
+                }
+              },
+              {
+                "name": "Web",
+                "parameters": {
+                  "SWEPath": "c:\\siebel\\SWEApp"
+                }
+              },
+              {
+                "name": "Siebel Gateway",
+                "parameters": {
+                  "path": "c:\\siebel\\gtwsrvr"
+                }
+              },
+              {
+                "name": "Siebel Server",
+                "parameters": {
+                  "path": "c:\\siebel\\siebsrvr",
+                  "roles": [
+                    "Application",
+                    "Integration"
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "name": "sbl81srvr02",
+            "domain": "siebel.local",
+            "ip": "10.10.10.62",
+            "ram": "4Gb",
+            "cpu": "Intel 1.6HGz",
+            "hdd": "40Gb",
+            "os": "Win2k8r2_en",
+            "java": {
+              "version": "1.6.1",
+              "home_dir": "c:\\program files\\java"
+            },
+            "oracle_client": {
+              "version": "11.2.0",
+              "home_dir": "c:\\app\\product\\11.2.0"
+            },
+            "server_roles": [
+              {
+                "name": "Siebel Server",
+                "parameters": {
+                  "path": "c:\\siebel\\siebsrvr",
+                  "roles": [
+                    "Application"
+                  ]
+                }
+              },
+              {
+                "name": "Siebel Tools",
+                "parameters": {
+                  "path": "c:\\siebel\\Tools"
+                }
+              }
+            ]
+          },
+          {
+            "name": "db_server_11g",
+            "domain": "siebel.local",
+            "ip": "10.10.10.60",
+            "ram": "4Gb",
+            "cpu": "Intel 1.6HGz",
+            "hdd": "40Gb",
+            "os": "Win2k8r2_en",
+            "java": {
+              "version": "",
+              "home_dir": ""
+            },
+            "oracle_client": {
+              "version": "",
+              "home_dir": ""
+            },
+            "server_roles": [
+              {
+                "name": "Database",
+                "parameters": {
+                  "path": "c:\\app\\product\\11.2.0"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "name": "Base",
+      "source": {
+        "server_roles": [
+          {
+            "name": "Database",
+            "parameters": {
+              "vendor": "",
+              "version": "",
+              "db_name": "",
+              "user": "",
+              "password": ""
+            },
+            "assoc": false
+          },
+          {
+            "name": "Filesystem",
+            "parameters": {},
+            "assoc": false
+          },
+          {
+            "name": "Siebel Gateway",
+            "parameters": {
+              "version": "",
+              "enterprise": ""
+            },
+            "assoc": false
+          },
+          {
+            "name": "Web",
+            "parameters": {
+              "vendor": "",
+              "version": ""
+            },
+            "assoc": false
+          },
+          {
+            "name": "Siebel Server",
+            "parameters": {},
+            "assoc": false
+          },
+          {
+            "name": "Siebel Tools",
+            "parameters": {},
+            "assoc": false
+          }
+        ],
+        "servers": []
+      }
+    }
+  ]
+}

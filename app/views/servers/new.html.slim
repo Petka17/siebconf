@@ -1,0 +1,14 @@
+= render partial: 'environments/provide_variables', locals: { environment: @environment }
+
+= render partial: 'environments/env_tabs', locals: { env_list: @environments, selected_env: @environment }
+
+.row
+  .col-md-4.col-md-offset-4
+
+    h2.text-center Add a new server
+
+    = form_tag environment_servers_path(@environment), class: "form-horizontal", role: "form" do
+
+      = render partial: 'form_fields', locals: { server: nil, tmpl: @tmpl}
+
+      = submit_tag "Add", class: "btn btn-lg btn-primary btn-block" 

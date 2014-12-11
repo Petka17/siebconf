@@ -1,0 +1,56 @@
+{
+  "server_roles": [
+    {
+      "name": "Database",
+      "parameters": {
+        "vendor": "",
+        "version": "",
+        "db_name": "",
+        "user": "",
+        "password": ""
+      },
+      "assoc": false
+    },
+    {
+      "name": "Filesystem",
+      "parameters": {
+        "network_path": ""
+      },
+      "assoc": false
+    },
+    {
+      "name": "Siebel Gateway",
+      "parameters": {
+        "version": "",
+        "enterprise": ""
+      },
+      "assoc": false
+    },
+    {
+      "name": "Web",
+      "parameters": {
+        "vendor": "",
+        "version": ""
+      },
+      "assoc": false
+    },
+    {
+      "name": "Siebel Server",
+      "parameters": {
+
+      },
+      "assoc": false
+    },
+    {
+      "name": "Siebel Tools",
+      "parameters": {
+        "user": "",
+        "password": ""
+      },
+      "assoc": false
+    }
+  ],
+  "servers": [
+
+  ]
+}

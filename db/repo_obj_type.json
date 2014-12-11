@@ -1,0 +1,198 @@
+[
+  {
+    "category": "User Inteface",
+    "name": "Applet",
+    "table": "S_APPLET",
+    "sif_name": "APPLET"
+  },
+  {
+    "category": "User Inteface",
+    "name": "View",
+    "table": "S_VIEW",
+    "sif_name": "VIEW"
+  },
+  {
+    "category": "User Inteface",
+    "name": "Screen",
+    "table": "S_SCREEN",
+    "sif_name": "SCREEN"
+  },
+  {
+    "category": "User Inteface",
+    "name": "Application",
+    "table": "S_APPLICATION",
+    "sif_name": "APPLICATION"
+  },
+  {
+    "category": "Object Model",
+    "name": "Business Component",
+    "table": "S_BUSCOMP",
+    "sif_name": "BUSINESS_COMPONENT"
+  },
+  {
+    "category": "Object Model",
+    "name": "Business Object",
+    "table": "S_BUSOBJ",
+    "sif_name": "BUSINESS_OBJECT"
+  },
+  {
+    "category": "Object Model",
+    "name": "Pick List",
+    "table": "S_PICKLIST",
+    "sif_name": "PICK_LIST"
+  },
+  {
+    "category": "Object Model",
+    "name": "Link",
+    "table": "S_LINK",
+    "sif_name": "LINK"
+  },
+  {
+    "category": "Object Model",
+    "name": "Table",
+    "table": "S_TABLE",
+    "condition": "TYPE <> 'Interface'",
+    "sif_name": "TABLE"
+  },
+  {
+    "category": "Dynamics",
+    "name": "Business Service",
+    "table": "S_SERVICE",
+    "sif_name": "BUSINESS_SERVICE"
+  },
+  {
+    "category": "Dynamics",
+    "name": "Workflow Process",
+    "table": "S_WFR_PROC",
+    "column": "PROC_NAME",
+    "sif_name": "WORKFLOW_PROCESS"
+  },
+  {
+    "category": "Dynamics",
+    "name": "Task",
+    "table": "S_TU_TASK",
+    "column": "TASK_NAME",
+    "sif_name": "TASK"
+  },
+  {
+    "category": "Dynamics",
+    "name": "Task Group",
+    "table": "S_TU_TASK_GRP",
+    "sif_name": "TASK_GROUP"
+  },
+  {
+    "category": "Integration",
+    "name": "Integration Object",
+    "table": "S_INT_OBJ",
+    "sif_name": "INTEGRATION_OBJECT"
+  },
+  {
+    "category": "Integration",
+    "name": "Content Object",
+    "table": "S_CONTENT_OBJ",
+    "sif_name": "CONTENT_OBJECT"
+  },
+  {
+    "category": "Integration",
+    "name": "EIM Interface Table",
+    "table": "S_TABLE",
+    "condition": "TYPE = 'Interface'",
+    "sif_name": "TABLE"
+  },
+  {
+    "category": "Integration",
+    "name": "Import Object",
+    "table": "S_IMPORT_OBJECT",
+    "sif_name": "IMPORT_OBJECT"
+  },
+  {
+    "category": "Policy and Assignment",
+    "name": "Assignment Attribute",
+    "table": "S_ASGN_ATTR",
+    "sif_name": "ASSIGNMENT_ATTRIBUTE"
+  },
+  {
+    "category": "Policy and Assignment",
+    "name": "Assignment Criteria",
+    "table": "S_ASGN_ITEM_TYPE",
+    "sif_name": "ASSIGNMENT_CRITERIA"
+  },
+  {
+    "category": "Policy and Assignment",
+    "name": "Workflow Policy Column",
+    "table": "S_ESCL_COL",
+    "sif_name": "WORKFLOW_POLICY_COLUMN"
+  },
+  {
+    "category": "Policy and Assignment",
+    "name": "Workflow Policy Object",
+    "table": "S_ESCL_OBJECT",
+    "sif_name": "WORKFLOW_POLICY_OBJECT"
+  },
+  {
+    "category": "Policy and Assignment",
+    "name": "Workflow Policy Program",
+    "table": "S_PROG_DEFN",
+    "sif_name": "WORKFLOW_POLICY_PROGRAM"
+  },
+  {
+    "category": "Toolbar and Menu",
+    "name": "Toolbar",
+    "table": "S_TOOLBAR",
+    "sif_name": "TOOLBAR"
+  },
+  {
+    "category": "Toolbar and Menu",
+    "name": "Menu",
+    "table": "S_MENU",
+    "sif_name": "MENU"
+  },
+  {
+    "category": "Toolbar and Menu",
+    "name": "Command",
+    "table": "S_COMMAND",
+    "sif_name": "COMMAND"
+  },
+  {
+    "category": "Icons",
+    "name": "Icon Map",
+    "table": "S_ICON_MAP",
+    "sif_name": "ICON_MAP"
+  },
+  {
+    "category": "Icons",
+    "name": "Bitmap Category",
+    "table": "S_BITMAP_CAT",
+    "sif_name": "BITMAP_CATEGORY"
+  },
+  {
+    "category": "Icons",
+    "name": "HTML Hierarchy Bitmap",
+    "table": "S_HIERARCHY_BMP",
+    "sif_name": "HTML_HIERARCHY_BITMAP"
+  },
+  {
+    "category": "Localization",
+    "name": "Symbolic String",
+    "table": "S_SYM_STR",
+    "sif_name": "SYMBOLIC_STRING"
+  },
+  {
+    "category": "Localization",
+    "name": "Message Category",
+    "table": "S_ERR_MSG_CAT",
+    "sif_name": "MESSAGE_CATEGORY"
+  },
+  {
+    "category": "UI Template",
+    "name": "Web Template",
+    "table": "S_WEB_TMPL",
+    "sif_name": "WEB_TEMPLATE"
+  },
+  {
+    "category": "UI Template",
+    "name": "Web Page",
+    "table": "S_WEB_PG",
+    "sif_name": "WEB_PAGE"
+  }
+]

@@ -1,0 +1,182 @@
+{
+  "server_roles": [
+    {
+      "name": "Database",
+      "parameters": {
+        "vendor": "Oracle",
+        "version": "10.2.0",
+        "db_name": "siebeldb",
+        "user": "siebel",
+        "password": "siebel"
+      },
+      "assoc": true
+    },
+    {
+      "name": "Filesystem",
+      "parameters": {
+        "network_path": ""
+      },
+      "assoc": true
+    },
+    {
+      "name": "Siebel Gateway",
+      "parameters": {
+        "version": "8.0.0.13",
+        "enterprise": "SBA_80"
+      },
+      "assoc": true
+    },
+    {
+      "name": "Web",
+      "parameters": {
+        "vendor": "IIS",
+        "version": "6.0"
+      },
+      "assoc": true
+    },
+    {
+      "name": "Siebel Server",
+      "parameters": {
+
+      },
+      "assoc": true
+    },
+    {
+      "name": "Siebel Tools",
+      "parameters": {
+        "user": "sadmin",
+        "password": "sadmin"
+      },
+      "assoc": false
+    }
+  ],
+  "servers": [
+    {
+      "name": "sblsrvr01",
+      "domain": "siebel.local",
+      "ip": "10.10.10.67",
+      "ram": "2Gb",
+      "cpu": "Intel 1.6HGz",
+      "hdd": "30Gb",
+      "os": "Win2k3r2sp1ent_en",
+      "java": {
+        "version": "",
+        "home_dir": ""
+      },
+      "oracle_client": {
+        "version": "10.2.0",
+        "home_dir": "c:\\oracle\\product\\10.2.0\\client"
+      },
+      "server_roles": [
+        {
+          "name": "Filesystem",
+          "parameters": {
+            "path": "c:\\sba80\\fs"
+          }
+        },
+        {
+          "name": "Web",
+          "parameters": {
+            "SWEPath": "c:\\sba80\\SWEApp"
+          }
+        },
+        {
+          "name": "Siebel Gateway",
+          "parameters": {
+            "path": "c:\\sba80\\gtwsrvr"
+          }
+        },
+        {
+          "name": "Siebel Server",
+          "parameters": {
+            "path": "c:\\sba80\\siebsrvr",
+            "roles": [
+              "Application"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "sblsrvr02",
+      "domain": "siebel.local",
+      "ip": "10.10.10.68",
+      "ram": "2Gb",
+      "cpu": "Intel 1.6HGz",
+      "hdd": "30Gb",
+      "os": "Win2k3r2sp1ent_en",
+      "java": {
+        "version": "",
+        "home_dir": ""
+      },
+      "oracle_client": {
+        "version": "10.2.0",
+        "home_dir": "c:\\oracle\\product\\10.2.0\\client"
+      },
+      "server_roles": [
+        {
+          "name": "Siebel Server",
+          "parameters": {
+            "path": "c:\\sba80\\siebsrvr",
+            "roles": [
+              "Workflow"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "db_server_10g",
+      "domain": "siebel.local",
+      "ip": "10.10.10.64",
+      "ram": "2Gb",
+      "cpu": "Intel 2.0HGz",
+      "hdd": "20Gb",
+      "os": "Win2k3r2sp2ent_en",
+      "java": {
+        "version": "",
+        "home_dir": ""
+      },
+      "oracle_client": {
+        "version": "",
+        "home_dir": ""
+      },
+      "server_roles": [
+        {
+          "name": "Database",
+          "parameters": {
+            "path": "d:\\oracle\\product\\10.2.0\\db",
+            "port": "1521"
+          }
+        }
+      ]
+    },
+    {
+      "name": "student00",
+      "domain": "siebel.local",
+      "ip": "10.10.10.60",
+      "ram": "2Gb",
+      "cpu": "Intel 2.0HGz",
+      "hdd": "10Gb",
+      "os": "WinXPsp3",
+      "ssh_user": "siebel",
+      "ssh_password": "1qazZAQ!",
+      "java": {
+        "version": "",
+        "home_dir": ""
+      },
+      "oracle_client": {
+        "version": "10.2.0",
+        "home_dir": "c:\\oracle\\product\\10.2.0\\client"
+      },
+      "server_roles": [
+        {
+          "name": "Siebel Tools",
+          "parameters": {
+            "path": "c:\\sba80\\Tools"
+          }
+        }
+      ]
+    }
+  ]
+}

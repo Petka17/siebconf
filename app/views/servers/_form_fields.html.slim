@@ -1,0 +1,46 @@
+= render partial: 'form_field', locals: { field: "server[name]", label: "Name", value: "#{server.nil? ? "" : server.name}" }
+
+= render partial: 'form_field', locals: { field: "server[domain]", label: "Domain", value: "#{server.nil? ? "" : server.domain}" }
+
+= render partial: 'form_field', locals: { field: "server[ip]", label: "IP address", value: "#{server.nil? ? "" : server.ip}" }
+
+= render partial: 'form_field', locals: { field: "server[os]", label: "OS", value: "#{server.nil? ? "" : server.os}" }
+
+- tmpl[:server_roles].each do |sr|
+
+  .form-group.form-group-sm
+    = label_tag "server[server_roles][#{sr[:name]}][assoc]", "#{sr[:name]}", class: "col-sm-5"
+      h4.text-right 
+        = sr[:name]
+    .col-sm-7
+      = check_box_tag "server[server_roles][#{sr[:name]}][assoc]", "yes", sr[:assign], class: "form-control"
+
+  - sr[:parameters].each do |key, value|
+    .form-group.form-group-sm
+      = label_tag "server[server_roles][#{sr[:name]}][#{key}]", "#{key}", class: "col-sm-5"
+        p.text-right
+          = key
+      .col-sm-7
+        = text_field_tag "server[server_roles][#{sr[:name]}][#{key}]", "#{server_role_params_value(value)}", class: "form-control"
+
+h4.text-center Java 
+= render partial: 'form_field', locals: { field: "server[java][version]", label: "version", value: "#{server.nil? ? "" : server.java[:version]}" }
+
+= render partial: 'form_field', locals: { field: "server[java][home_dir]", label: "home dir", value: "#{server.nil? ? "" : server.java[:home_dir]}" }
+
+h4.text-center Oracle Client 
+= render partial: 'form_field', locals: { field: "server[oracle_client][version]", label: "version", value: "#{server.nil? ? "" : server.oracle_client[:version]}" }
+
+= render partial: 'form_field', locals: { field: "server[oracle_client][home_dir]", label: "home dir", value: "#{server.nil? ? "" : server.oracle_client[:home_dir]}" }
+
+h4.text-center SSH 
+= render partial: 'form_field', locals: { field: "server[ssh_user]", label: "User", value: "#{server.nil? ? "" : server.ssh_user}" }
+
+= render partial: 'form_field', locals: { field: "server[ssh_password]", label: "Password", value: "#{server.nil? ? "" : server.ssh_password}" }
+
+h4.text-center Hardware 
+= render partial: 'form_field', locals: { field: "server[ram]", label: "RAM", value: "#{server.nil? ? "" : server.ram}" }
+
+= render partial: 'form_field', locals: { field: "server[cpu]", label: "CPU", value: "#{server.nil? ? "" : server.cpu}" }
+
+= render partial: 'form_field', locals: { field: "server[hdd]", label: "HDD", value: "#{server.nil? ? "" : server.hdd}" }

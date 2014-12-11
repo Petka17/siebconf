@@ -1,0 +1,62 @@
+.panel.panel-primary
+  .panel-heading
+    table.table_for_heading
+      tr
+        td
+          = "Servers"
+        td
+          = link_to new_environment_server_path(environment), class: "btn btn-default btn-xs pull-right"
+            span.glyphicon.glyphicon-plus aria-hidden="true"
+    
+  .row
+    - environment.servers.each do |server|
+      .col-md-3
+        .panel.panel-primary.margin-10
+          .panel-heading
+            table.table_for_heading
+              tr
+                td
+                 = server.name
+                td
+                  .pull-right
+                    = link_to edit_environment_server_path(environment, server), class: "btn btn-default btn-xs margin-1"
+                      span.glyphicon.glyphicon-edit aria-hidden="true"
+                  
+                    = link_to environment_server_path(environment, server), class: "btn btn-default btn-xs margin-1", method: :delete
+                      span.glyphicon.glyphicon-remove aria-hidden="true"
+          ul.list-group
+            li.list-group-item.list-group-item-info
+              table.table_for_heading
+                = render partial: "server_list_row", locals: { label: "Domain", value: server.domain }
+                = render partial: "server_list_row", locals: { label: "IP address", value: server.ip }
+                = render partial: "server_list_row", locals: { label: "OS", value: server.os }
+                
+            - if server.server_roles
+              - server.server_roles.each do |sr|
+                li.list-group-item
+                  strong 
+                    = sr[:name]
+                  table.table_for_heading
+                    - sr[:parameters].each do |key, value|
+                      = render partial: "server_list_row", locals: { label: key, value: value }
+
+            li.list-group-item.list-group-item-info
+              strong Java 
+              table.table_for_heading
+                = render partial: "server_list_row", locals: { label: "version", value: server_hash_params_value(server.java, :version) }
+                = render partial: "server_list_row", locals: { label: "home dir", value: server_hash_params_value(server.java, :home_dir) }
+            li.list-group-item.list-group-item-info
+              strong Oracle Client
+              table.table_for_heading
+                = render partial: "server_list_row", locals: { label: "version", value: server_hash_params_value(server.oracle_client, :version) }
+                = render partial: "server_list_row", locals: { label: "home dir", value: server_hash_params_value(server.oracle_client, :home_dir) }
+            li.list-group-item.list-group-item-success
+              strong SSH
+              table.table_for_heading
+                = render partial: "server_list_row", locals: { label: "user", value: server.ssh_user }
+                = render partial: "server_list_row", locals: { label: "password", value: server.ssh_password }
+            li.list-group-item.list-group-item-success
+              table.table_for_heading
+                = render partial: "server_list_row", locals: { label: "RAM", value: server.ram }
+                = render partial: "server_list_row", locals: { label: "CPU", value: server.cpu }
+                = render partial: "server_list_row", locals: { label: "HDD", value: server.hdd } 

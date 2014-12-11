@@ -1,0 +1,13 @@
+- provide :header_env, "true"
+
+.container
+  .row
+    .col-md-4.col-md-offset-4
+      = form_tag update_order_environments_path, class: "form-horizontal", role: "form" do
+        - @environments.each do |env|
+          .form-group.form-group-sm
+            = label_tag "environments[#{env.id}]", "#{env.name}", class: "col-sm-7"
+            .col-sm-5
+              = number_field_tag "environments[#{env.id}]", env.order, class: "form-control"
+            
+        = submit_tag "Update", class: "btn btn-lg btn-primary btn-block" 

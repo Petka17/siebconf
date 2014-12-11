@@ -1,0 +1,15 @@
+= render partial: 'provide_variables', locals: { environment: @environment }
+
+= render partial: 'env_tabs', locals: { env_list: @environments, selected_env: @environment }
+
+.row
+  .col-md-2
+    .row
+      #list
+        = render partial: 'server_role_list', locals: { environment: @environment }
+    .row
+      = link_to "Edit Environment", edit_environment_path(@environment)
+
+  .col-md-10
+      #servers
+        = render partial: 'server_list', locals: { environment: @environment }

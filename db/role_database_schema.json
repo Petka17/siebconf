@@ -1,0 +1,20 @@
+{
+  "_id": "DatabaseRole",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "parameters": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "path": {
+          "type": "string",
+          "required": true
+        }
+      }
+    }
+  }
+}

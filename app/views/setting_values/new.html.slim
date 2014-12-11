@@ -1,0 +1,24 @@
+- provide :header_env, "true"
+
+.row
+  .col-md-10.col-md-offset-1
+
+    h2.text-center Add a new value
+
+    = form_tag setting_setting_values_path(@setting), class: "form-horizontal", role: "form" do
+
+      .form-group.form-group-sm
+        = label_tag "setting_value[name]", "", class: "col-sm-2"
+          p.text-right
+            = "Name"
+        .col-sm-10
+          = text_field_tag "setting_value[name]", "", class: "form-control"
+
+      .form-group.form-group-sm
+        = label_tag "setting_value[source]", "", class: "col-sm-2"
+          p.text-right
+            = "Source"
+        .col-sm-10
+          = text_area_tag "setting_value[source]", "", class: "form-control", rows: 30
+
+      = submit_tag "Add", class: "btn btn-lg btn-primary btn-block" 

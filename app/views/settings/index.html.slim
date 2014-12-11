@@ -1,0 +1,12 @@
+- provide :header_env, "true"
+
+.row
+  .well
+    = link_to "Add new setting", new_setting_path, class: "btn btn-default btn-xs"
+
+.row
+  table.table.table-hover
+    - @settings.each do |s|
+      tr
+        td 
+          = link_to s.name, s

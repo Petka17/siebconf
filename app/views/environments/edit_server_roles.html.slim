@@ -1,0 +1,19 @@
+= render partial: 'provide_variables', locals: { environment: @environment }
+
+= render partial: 'env_tabs', locals: { env_list: @environments, selected_env: @environment }
+
+.row
+  .col-md-3
+    = form_tag update_server_roles_environment_path(@environment), class: "form-horizontal", role: "form" do
+      - @environment.server_roles.each do |sr|
+        - unless sr[:parameters] == {}
+          h4
+            = sr[:name]
+          br
+          - sr[:parameters].each do |key, value|
+            .form-group.form-group-sm
+              = label_tag "#{sr[:name]}[#{key}]", "#{key}", class: "col-sm-7"
+              .col-sm-5
+                = text_field_tag "#{sr[:name]}[#{key}]", value, class: "form-control"
+          
+      = submit_tag "Update", class: "btn btn-lg btn-primary btn-block" 

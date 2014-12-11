@@ -1,0 +1,70 @@
+{
+  "id": "Server",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "domain": {
+      "type": "string",
+      "required": false
+    },
+    "ip": {
+      "type": "string",
+      "required": false
+    },
+    "ram": {
+      "type": "string",
+      "required": false
+    },
+    "cpu": {
+      "type": "string",
+      "required": false
+    },
+    "hdd": {
+      "type": "string",
+      "required": false
+    },
+    "os": {
+      "type": "string",
+      "required": true
+    },
+    "java": {
+      "type": "object",
+      "required": false,
+      "properties": {
+        "home_dir": {
+          "type": "string",
+          "required": true
+        },
+        "version": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "oracle_client": {
+      "type": "object",
+      "required": false,
+      "properties": {
+        "home_dir": {
+          "type": "string",
+          "required": true
+        },
+        "version": {
+          "type": "string",
+          "required": true
+        }
+      }
+    },
+    "server_roles": {
+      "type": "array",
+      "required": false
+      "items": {
+        "type": "object",
+        "required": false
+      }
+    }
+  }
+}
