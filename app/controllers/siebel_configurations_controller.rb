@@ -3,7 +3,7 @@ class SiebelConfigurationsController < ApplicationController
   before_filter :get_environments,          only: [:index, :show]
   before_filter :get_environment,           only: [:index, :show, :new, :create]
 
-  before_filter :get_siebel_configurations, only: [:index, :show, :create]
+  before_filter :get_siebel_configurations, only: [:index, :show]
   before_filter :get_siebel_configuration,  only: [:show]
 
   def index
@@ -22,18 +22,10 @@ class SiebelConfigurationsController < ApplicationController
   end
 
   def create
-    @last_siebel_configuration = @siebel_configurations.first()
-
-    if @last_siebel_configuration
-      @siebel_configuration = @last_siebel_configuration.clone
-      @siebel_configuration.update_attributes(siebel_configuration_params)
-      @siebel_configuration.created_at = Time.now
-    else
-      @siebel_configuration = SiebelConfiguration.new(siebel_configuration_params)
-    end
+    @siebel_configuration = SiebelConfiguration.create_new_config(siebel_configuration_params)
 
     if @siebel_configuration.save
-      GetRepoObjectIndex.perform_async @siebel_configuration[:id].to_s
+      GetRepoObjectIndex.perform_async @siebel_configuration.id.to_s
       redirect_to environment_siebel_configuration_path(@environment, @siebel_configuration)
     else
       render 'new'

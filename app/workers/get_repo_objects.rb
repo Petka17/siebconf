@@ -15,7 +15,6 @@ class GetRepoObjects
     
     puts "Get Changed Objects from index"
     current_repo_obj_index = siebel_configuration.repo_obj_index.select { |obj| obj["change_flg"] } || []
-    puts "#{current_repo_obj_index}"
 
     puts "Prepare folder structure and obj.txt file"
     prepare_for_export current_repo_obj_index, config_id

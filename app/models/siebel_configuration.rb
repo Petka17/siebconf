@@ -7,12 +7,12 @@ class SiebelConfiguration
 
   field :version,     type: String
   field :description, type: String
-  field :status,      type: String,   default: "Creating Object Index"
+  field :status,      type: String
 
-  field :repo_obj_index,    type: Array
-  field :admin_obj_index,   type: Array
-  field :master_data_index, type: Array
-  field :env_config,        type: Array
+  field :repo_obj_index,    type: Array, default: []
+  field :admin_obj_index,   type: Array, default: []
+  field :master_data_index, type: Array, default: []
+  field :env_config,        type: Array, default: []
 
   validates_presence_of :version
   validates_presence_of :description
@@ -22,6 +22,23 @@ class SiebelConfiguration
 
   def self.get_config_by_env_id environment_id
     where(environment_id: environment_id).desc(:created_at)
+  end
+
+  def self.create_new_config siebel_configuration_params
+    last_siebel_configuration = SiebelConfiguration.get_config_by_env_id(siebel_configuration_params[:environment_id]).first()
+
+    if last_siebel_configuration
+      siebel_configuration = last_siebel_configuration.clone
+      siebel_configuration.update_attributes(siebel_configuration_params)
+      siebel_configuration.created_at = Time.now
+      siebel_configuration.updated_at = Time.now
+    else
+      siebel_configuration = SiebelConfiguration.new(siebel_configuration_params)
+    end
+
+    siebel_configuration.status = "Updating Object Index"
+
+    siebel_configuration
   end
 
   def transform_object_index

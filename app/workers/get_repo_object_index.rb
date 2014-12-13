@@ -11,13 +11,12 @@ class GetRepoObjectIndex
 
     siebel_configuration = SiebelConfiguration.find(config_id)
     environment = Environment.find(siebel_configuration.environment_id)
-    
+
     puts "Get Current Object Index"
-    current_repo_obj_index = siebel_configuration.repo_obj_index || []
+    current_repo_obj_index = siebel_configuration.repo_obj_index
     puts "#{current_repo_obj_index}"
 
     current_repo_obj_index.each { |obj| obj["change_flg"] = false }
-    siebel_configuration.save
 
     puts "Query DB for changed objects"
     repo_obj_index = get_repo_obj_index(environment)
@@ -34,15 +33,10 @@ class GetRepoObjectIndex
           current_repo_obj_index << obj
         end
       end
-      puts "#{current_repo_obj_index}"
-
+      
       puts "Update Siebel Configuration"
-      siebel_configuration = SiebelConfiguration.find(config_id)
       siebel_configuration.status = "Getting Objects"
-      siebel_configuration.repo_obj_index = current_repo_obj_index
-      siebel_configuration.save
-
-      puts "#{siebel_configuration.repo_obj_index}"
+      siebel_configuration.upsert
 
       puts "Start Get Object Source Job"
       GetRepoObjects.perform_async config_id
@@ -94,7 +88,7 @@ class GetRepoObjectIndex
       puts "Close Connection"
       conn.close_connection if conn
     end
-    puts "Return changed objects: #{repo_obj_index}"
+    
     repo_obj_index
   end
 
