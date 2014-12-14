@@ -56,7 +56,7 @@ class SiebelConfiguration
       i_c = 0
       obj_type_list.select { |type| type[:category] == cat }.each do |type|
         k_c = 0
-        type_node = { text: type[:name], selectable: false, nodes: [] }
+        type_node = { text: type[:name].pluralize, selectable: false, nodes: [] }
         repo_obj_list.select { |obj| obj[:category] == cat and obj[:type] == type[:name] }.each do |obj|
           type_node[:nodes] << { text: obj[:name], color: "#{"#B24300" if obj[:change_flg]}", config_obj_id: "#{obj[:config_obj_id]}" }
           k_c += 1 if obj[:change_flg]
