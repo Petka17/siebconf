@@ -4,7 +4,7 @@ class Hash
     select do |key, value| 
       value.is_a? String 
     end.reject do |key, value| 
-      ["NAME", "UPDATED", "UPDATED_BY", "CREATED", "CREATED_BY"].include?(key) or key.start_with?("_") 
+      ["NAME", "PROJECT", "UPDATED", "UPDATED_BY", "CREATED", "CREATED_BY"].include?(key) or key.start_with?("_") 
     end
   end
 
