@@ -10,13 +10,13 @@ class Environment
 
   has_many :siebel_configurations
 
-  field :name, type: String
-  field :order, type: Integer, default: 0
-  field :tmpl_name, type: String, default: "Base"
+  field :name,           type: String
+  field :order,          type: Integer, default: 0
+  field :tmpl_name,      type: String, default: "Base"
 
   field :last_sync_date, type: DateTime
 
-  field :_id, type: String, default: ->{ name.to_s.parameterize }
+  field :_id,            type: String, default: ->{ name.to_s.parameterize }
 
   validates_presence_of :name
   

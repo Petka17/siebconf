@@ -1,0 +1,28 @@
+= render partial: 'provide_variables', locals: { environment: @environment }
+
+= render partial: 'environments/env_tabs', locals: { env_list: @environments, selected_env: @environment }
+
+= render partial: 'config_panel', locals: { environment: @environment, siebel_configuration: @siebel_configuration, pull_flg: false }
+
+.row
+  .col-md-3
+    h5 Commit List
+    #configuration_list
+      = render partial: 'configuration_list', locals: { siebel_configurations: @siebel_configurations, selected_conf: @siebel_configuration, selected_env: @environment }
+
+  .col-md-9
+
+    = form_tag create_push_environment_siebel_configuration_path(@environment, @siebel_configuration), class: "form-signin", role: "form" do |f|
+
+      h2.form-signin-heading.text-center Push configuration:
+
+      = label_tag "siebel_configuration[environment]", "Environment", class: "sr-only"
+      = select "siebel_configuration", "environment", @env_list, { include_blank: "Select Environment" }, class: "form-control", style: "height: 44px;"
+
+      = label_tag "siebel_configuration[version]", "Version", class: "sr-only"
+      = text_field_tag "siebel_configuration[version]", "", class: "form-control", placeholder: "Version"
+
+      = label_tag "siebel_configuration[description]", "Description", class: "sr-only"
+      = text_field_tag "siebel_configuration[description]", "", class: "form-control", placeholder: "Description"
+
+      = submit_tag "Push", class: "btn btn-lg btn-primary btn-block" 

@@ -2,22 +2,7 @@
 
 = render partial: 'environments/env_tabs', locals: { env_list: @environments, selected_env: @environment }
 
-.row
-  .well
-    .row
-      .col-md-4
-        table
-          tr
-            td
-              = button_to "Pull", new_environment_siebel_configuration_path(@environment), method: :get, class: "form-control", form_class: "form-inline"
-            td
-              = button_to "Push", new_environment_siebel_configuration_path(@environment), method: :get, class: "form-control", form_class: "form-inline"
-            td
-              = button_to "Validate", new_environment_siebel_configuration_path(@environment), method: :get, class: "form-control", form_class: "form-inline"
-      .col-md-8
-        - if @environment.last_sync_date
-          p.text-right
-            = @environment.last_sync_date.strftime("Last Sync Date: %d.%m.%Y %H:%M") 
+= render partial: 'config_panel', locals: { environment: @environment, siebel_configuration: @siebel_configuration, pull_flg: false }
 
 .row
   .col-md-3

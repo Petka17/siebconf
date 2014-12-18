@@ -1,0 +1,27 @@
+= render partial: 'provide_variables', locals: { environment: @environment }
+
+= render partial: 'environments/env_tabs', locals: { env_list: @environments, selected_env: @environment }
+
+= render partial: 'config_panel', locals: { environment: @environment, siebel_configuration: @siebel_configuration, pull_flg: true }
+
+.row
+  .col-md-3
+    h5 Commit List
+    #configuration_list
+      = render partial: 'configuration_list', locals: { siebel_configurations: @siebel_configurations, selected_conf: @siebel_configuration, selected_env: @environment }
+
+  .col-md-9
+
+    = form_tag create_pull_environment_siebel_configurations_path(@environment), class: "form-signin", role: "form" do |f|
+
+      h2.form-signin-heading.text-center Pull last changes:
+
+      = label_tag "siebel_configuration[version]", "Version", class: "sr-only"
+      = text_field_tag "siebel_configuration[version]", "", class: "form-control", placeholder: "Version"
+
+      = label_tag "siebel_configuration[description]", "Description", class: "sr-only"
+      = text_field_tag "siebel_configuration[description]", "", class: "form-control", placeholder: "Description"
+
+      = hidden_field_tag "siebel_configuration[environment_id]", @environment.id.to_s, class: "form-control", placeholder: "Description"
+
+      = submit_tag "Pull", class: "btn btn-lg btn-primary btn-block"

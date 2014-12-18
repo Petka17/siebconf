@@ -1,7 +1,5 @@
 class SettingsController < ApplicationController
 
-  require 'json'
-
   def index
     @settings = Setting.all
   end
@@ -16,8 +14,14 @@ class SettingsController < ApplicationController
 
   def create
     @setting = Setting.new(setting_params)
-    @setting.save
-    redirect_to @setting
+    
+    if @setting.save
+      flash[:info] = "New setting added"
+      redirect_to @setting
+    else
+      flash[:danger] = "Error during create"
+      render 'new'
+    end
   end
 
   private

@@ -1,26 +1,21 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  # The priority is based upon order of creation: first created -> highest priority.
-  # See how all your routes lay out with "rake routes".
 
-  # You can have the root of your site routed with "root"
   root 'static_pages#home'
 
   resources :users
   resources :sessions, only: [:new, :create, :destroy]
 
-  match '/signup',          to: 'users#new',                  via: 'get'
-  match '/signin',          to: 'sessions#new',               via: 'get'
-  match '/signout',         to: 'sessions#destroy',           via: 'delete'
+  match '/signup',  to: 'users#new',                  via: 'get'
+  match '/signin',  to: 'sessions#new',               via: 'get'
+  match '/signout', to: 'sessions#destroy',           via: 'delete'
 
+  resources :settings, only: [:index, :show, :new, :create] do
+    resources :setting_values, only: [:new, :create, :edit, :update, :destroy]
+  end
+  
   resources :environments do
-    resources :siebel_configurations do
-      get 'get_object_index'
-    end
-
-    resources :servers
-    
     collection do
       get 'edit_order'
       post 'update_order'
@@ -30,13 +25,24 @@ Rails.application.routes.draw do
       get 'edit_server_roles'
       post 'update_server_roles'
     end
+
+    resources :servers, only: [:new, :create, :edit, :update, :destroy]
+   
+    resources :siebel_configurations, only: [:index, :show, :edit, :update] do
+      collection do
+        get 'new_pull'
+        post 'create_pull'
+      end
+
+      member do
+        get 'get_object_index'
+        get 'new_push'
+        post 'create_push'
+      end 
+    end
   end
 
-  resources :configuration_objects
-  
-  resources :settings do
-    resources :setting_values 
-  end
+  resources :configuration_objects, only: [:show]
   
   mount Sidekiq::Web, at: '/sidekiq'
   

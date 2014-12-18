@@ -13,6 +13,5 @@
             = "Source"
         .col-sm-10
           = text_area_tag "setting_value[source]", JSON.pretty_generate(@value[:source]), class: "form-control", rows: 10
-          /= text_area_tag "setting_value[source]", @value[:source].to_json, class: "form-control"
 
       = submit_tag "Update", class: "btn btn-lg btn-primary btn-block" 

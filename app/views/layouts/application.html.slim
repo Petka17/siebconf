@@ -10,14 +10,6 @@ html
 
     = render 'layouts/header'
     
-    .container
-      .col-md-6.col-md-offset-3
-        - flash.each do |key, value|
-          = content_tag(:div, class: "alert alert-#{key} alert-dismissable") do
-            = value
-            = button_tag class: "close", data: { dismiss: "alert" }
-              span &times;
-    
     .container-fluid
       == yield
 

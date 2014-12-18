@@ -16,7 +16,7 @@ class GetRepoObjectIndex
     current_repo_obj_index = siebel_configuration.repo_obj_index
     puts "#{current_repo_obj_index}"
 
-    current_repo_obj_index.each { |obj| obj["change_flg"] = false }
+    current_repo_obj_index.each{ |obj| obj["change_flg"] = false }
 
     puts "Query DB for changed objects"
     repo_obj_index = get_repo_obj_index(environment)
@@ -25,7 +25,7 @@ class GetRepoObjectIndex
     if repo_obj_index.size > 0
       puts "Analyse changed objects over currect index"
       repo_obj_index.each do |obj|
-        curr_obj = current_repo_obj_index.detect { |o| o["type"]==obj["type"] and o["name"]==obj["name"] }
+        curr_obj = current_repo_obj_index.detect{ |o| o["type"]==obj["type"] and o["name"]==obj["name"] }
         if curr_obj
           curr_obj["change_flg"] = true
         else
@@ -54,9 +54,9 @@ class GetRepoObjectIndex
     last_upd = environment.last_sync_date ? environment.last_sync_date.strftime("%d.%m.%Y %H:%M:%S") : "01.11.2014 00:00:00"
     puts "Last Sync Date: #{last_upd}"
 
-    database_role   = environment.server_roles.detect { |sr| sr.name == "Database" }
-    database_server = environment.servers.detect { |s| s.server_roles.detect { |sr| sr[:name] == "Database" } }
-    port = database_server.server_roles.detect { |sr| sr[:name] == "Database" }[:parameters][:port] 
+    database_role   = environment.server_roles.detect{ |sr| sr.name == "Database" }
+    database_server = environment.servers.detect{ |s| s.server_roles.detect{ |sr| sr[:name] == "Database" } }
+    port = database_server.server_roles.detect{ |sr| sr[:name] == "Database" }[:parameters][:port] 
 
     user   = database_role[:parameters][:user]
     passwd = database_role[:parameters][:password]

@@ -1,3 +1,16 @@
+var showMergeUI = function(event, node) {
+  console.log(node);
+  // var ref = node.config_obj_id;
+  // if (ref != "")
+  // {
+  //   $.get(
+  //     "/configuration_objects/" + ref, 
+  //     function(data) { 
+  //       $('#object_desc').treeview({ data: data, showTags: true});
+  //     });
+  // }
+}
+
 var getObjectDesc = function(event, node) {
   console.log(node);
   var ref = node.config_obj_id;
@@ -6,7 +19,7 @@ var getObjectDesc = function(event, node) {
     $.get(
       "/configuration_objects/" + ref, 
       function(data) { 
-        $('#object_desc').treeview({ data: data, showTags: true});
+        $('#object_desc').treeview({ data: data, showTags: true, onNodeSelected: showMergeUI});
       });
   }
 }

@@ -44,7 +44,7 @@ class SiebelConfiguration
   def transform_object_index
     repo_obj_list = self.repo_obj_index || []
     obj_type_list = Setting.get_value_source_for_name("Configuration Object Types", "Repository Objects")
-    obj_cat_list  = obj_type_list.map { |o| o[:category] }.uniq
+    obj_cat_list  = obj_type_list.map{ |o| o[:category] }.uniq
 
     repo_obj_tree = []
     
@@ -54,10 +54,10 @@ class SiebelConfiguration
       cat_node = { text: cat, selectable: false, nodes: [] }
       i = 0
       i_c = 0
-      obj_type_list.select { |type| type[:category] == cat }.each do |type|
+      obj_type_list.select{ |type| type[:category] == cat }.each do |type|
         k_c = 0
         type_node = { text: type[:name].pluralize, selectable: false, nodes: [] }
-        repo_obj_list.select { |obj| obj[:category] == cat and obj[:type] == type[:name] }.each do |obj|
+        repo_obj_list.select{ |obj| obj[:category] == cat and obj[:type] == type[:name] }.each do |obj|
           type_node[:nodes] << { text: obj[:name], color: "#{"#B24300" if obj[:change_flg]}", config_obj_id: "#{obj[:config_obj_id]}" }
           k_c += 1 if obj[:change_flg]
         end

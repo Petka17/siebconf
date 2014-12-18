@@ -1,0 +1,27 @@
+= render partial: 'provide_variables', locals: { environment: @environment }
+
+= render partial: 'environments/env_tabs', locals: { env_list: @environments, selected_env: @environment }
+
+= render partial: 'config_panel', locals: { environment: @environment, siebel_configuration: @siebel_configuration, pull_flg: true }
+
+.row
+  .col-md-3
+    h5 Commit List
+    #configuration_list
+      = render partial: 'configuration_list', locals: { siebel_configurations: @siebel_configurations, selected_conf: @siebel_configuration, selected_env: @environment }
+
+  .col-md-9
+
+    = form_for [@environment, @siebel_configuration], html: { class: "form-signin", role: "form" } do |f|
+
+      h2.form-signin-heading.text-center Edit configuration:
+
+      = f.label :version, "Version", class: "sr-only"
+      = f.text_field :version, class: "form-control", placeholder: "Version"
+
+      = f.label :description, "Description", class: "sr-only"
+      = f.text_field :description, class: "form-control", placeholder: "Description"
+
+      = f.hidden_field :environment_id, class: "form-control", placeholder: "Description"
+
+      = f.submit "Update", class: "btn btn-lg btn-primary btn-block" 

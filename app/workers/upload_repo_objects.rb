@@ -17,20 +17,31 @@ class UploadRepoObjects
 
     current_repo_obj_index = siebel_configuration.repo_obj_index
 
-    current_repo_obj_index.select { |obj| obj[:change_flg] }.each do |obj|
+    current_repo_obj_index.select{ |obj| obj[:change_flg] }.each do |obj|
       puts "  #{obj[:name]}"
       
-      sif_name = object_type_list.detect { |t| t[:category] == obj[:category] and t[:name] == obj[:type] }[:sif_name]
+      sif_name = object_type_list.detect{ |t| t[:category] == obj[:category] and t[:name] == obj[:type] }[:sif_name]
       file_name = "#{path}/#{obj[:category].gsub(" ", "_")}/#{obj[:type].gsub(" ", "_")}/#{obj[:name]}.sif"
       
-      config_obj = ConfigurationObject.new(group: "Repository", category: obj[:category], type: obj[:type], name: obj[:name])
-      config_obj.update_source_with_xml sif_name, Crack::XML.parse(File.read(file_name))
-      config_obj.create_indexes
-      config_obj.upsert
+      new_obj = ConfigurationObject.new(group: "Repository", category: obj[:category], type: obj[:type], name: obj[:name])
+      new_obj.update_source_with_xml sif_name, Crack::XML.parse(File.read(file_name))
+      new_obj.create_indexes
 
-      obj[:origin_config_obj_id] = obj[:config_obj_id]
-      obj[:config_obj_id]        = config_obj.id.to_s
-      obj[:sha1]                 = config_obj.sha1
+      if obj[:config_obj_id]
+        orig_obj = ConfigurationObject.find(obj[:config_obj_id])
+        
+        if orig_obj
+          orig_obj = orig_obj.clone
+          orig_obj.create_indexes
+          orig_obj.compare_with_object new_obj
+          new_obj = orig_obj
+          obj[:origin_config_obj_id] = obj[:config_obj_id]
+        end
+      end
+      new_obj.upsert
+
+      obj[:config_obj_id] = new_obj.id.to_s
+      obj[:sha1]          = new_obj.sha1
     end
 
     siebel_configuration.status = "Upload Completed"

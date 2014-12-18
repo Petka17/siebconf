@@ -13,6 +13,13 @@ nav.navbar role="navigation"
         li class="#{yield(:header_configuration_class)}"
           = link_to "Configuration", "#{yield(:header_configuration_path)}"
 
+    .col-md-6.col-md-offset-1
+      - flash.each do |key, value|
+        = content_tag(:div, class: "margin-bottom-0 alert alert-#{key} alert-dismissable") do
+          = value
+          = button_tag class: "close", data: { dismiss: "alert" }
+            span &times;
+
     ul.nav.navbar-nav.navbar-right
 
       li.dropdown

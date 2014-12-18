@@ -14,7 +14,7 @@ class GetRepoObjects
     environment = Environment.find(siebel_configuration.environment_id)
     
     puts "Get Changed Objects from index"
-    current_repo_obj_index = siebel_configuration.repo_obj_index.select { |obj| obj["change_flg"] } || []
+    current_repo_obj_index = siebel_configuration.repo_obj_index.select{ |obj| obj["change_flg"] } || []
 
     puts "Prepare folder structure and obj.txt file"
     prepare_for_export current_repo_obj_index, config_id
@@ -61,12 +61,12 @@ class GetRepoObjects
   end
 
   def execute_export environment, config_id
-    tools_role   = environment.server_roles.detect { |sr| sr.name == "Siebel Tools" }
-    tools_server = environment.servers.detect { |s| s.server_roles.detect { |sr| sr[:name] == "Siebel Tools" } }
+    tools_role   = environment.server_roles.detect{ |sr| sr.name == "Siebel Tools" }
+    tools_server = environment.servers.detect{ |s| s.server_roles.detect{ |sr| sr[:name] == "Siebel Tools" } }
 
     user   = tools_role[:parameters][:user]
     passwd = tools_role[:parameters][:password]
-    tools_path = tools_server.server_roles.detect { |sr| sr[:name] == "Siebel Tools" }[:parameters][:path]
+    tools_path = tools_server.server_roles.detect{ |sr| sr[:name] == "Siebel Tools" }[:parameters][:path]
     
     command_str = "#{tools_path}\\BIN\\siebdev.exe " +
     "/c #{tools_path}\\BIN\\ENU\\tools.cfg /u #{user} /p #{passwd} /d ServerDataSrc " +
@@ -75,13 +75,14 @@ class GetRepoObjects
     puts "#{command_str}"
 
     Net::SSH.start(tools_server[:ip], "") do |ssh|
-      puts "connected"
+      puts "#{Time.now} Connected to #{tools_server[:ip]}"
       ssh.scp.upload! "tmp/siebel_configs/#{config_id}", "c:\\temp\\siebel_configs", recursive: true
       ssh.exec! command_str
       # ssh.scp.download! "c:\\temp\\siebel_configs\\#{config_id}", "tmp/siebel_configs", recursive: true
     end
-    puts "copy back"
+    puts "#{Time.now} Copy back"
     system "scp -r #{tools_server[:ip]}:c:\\\\temp\\\\siebel_configs\\\\#{config_id} tmp/siebel_configs"
+    puts "#{Time.now}"
   end
 
 end

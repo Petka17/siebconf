@@ -1,5 +1,7 @@
 class SettingValuesController < ApplicationController
 
+  require 'json'
+
   before_filter :get_setting
   before_filter :get_value, only: [:edit, :update]
 
@@ -8,11 +10,17 @@ class SettingValuesController < ApplicationController
 
   def create
     value = {}
-    value[:name] = params[:setting_value][:name]
+    value[:name]  = params[:setting_value][:name]
     value[:source] = JSON.parse(params[:setting_value][:source].to_s)
     @setting.values << value
-    @setting.save
-    redirect_to @setting
+
+    if @setting.save
+      flash[:info] = "New param is added"
+      redirect_to @setting
+    else
+      flash[:danger] = "Error during create"
+      render 'new'
+    end
   end
 
   def edit
@@ -21,13 +29,20 @@ class SettingValuesController < ApplicationController
 
   def update
     @value[:source] = JSON.parse(params[:setting_value][:source])
-    @setting.save
-    redirect_to @setting
+
+    if @setting.save
+      flash[:info] = "Param is updated"
+      redirect_to @setting
+    else
+      flash[:danger] = "Error during update"
+      render 'edit'
+    end
   end
 
   def destroy
-    @setting.values.reject!{|e| e[:name] == params[:id]}
+    @setting.values.reject!{ |e| e[:name] == params[:id] }
     @setting.save
+    
     redirect_to @setting
   end
 
@@ -40,4 +55,5 @@ class SettingValuesController < ApplicationController
     def get_value
       @value = @setting.get_value(params[:id])
     end
+
 end
