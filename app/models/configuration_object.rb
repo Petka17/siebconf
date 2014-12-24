@@ -236,7 +236,7 @@ class ConfigurationObject
     def get_node_attr obj
       obj.get_string_attr.map do |key, value|
         { 
-          text: "#{key}: #{value}", 
+          text: "#{key.gsub('xml__', '')}: #{value}", 
           selectable: !obj["_new_#{key}"].nil?, 
           color: "#{"#B24300" if !obj["_new_" + key].nil?}", 
           icon: "glyphicon glyphicon-tag",

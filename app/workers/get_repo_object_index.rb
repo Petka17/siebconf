@@ -14,13 +14,11 @@ class GetRepoObjectIndex
 
     puts "Get Current Object Index"
     current_repo_obj_index = siebel_configuration.repo_obj_index
-    puts "#{current_repo_obj_index}"
 
     current_repo_obj_index.each{ |obj| obj["change_flg"] = false }
 
     puts "Query DB for changed objects"
     repo_obj_index = get_repo_obj_index(environment)
-    puts "#{repo_obj_index}"
 
     if repo_obj_index.size > 0
       puts "Analyse changed objects over currect index"

@@ -24,7 +24,7 @@ class UploadRepoObjects
       file_name = "#{path}/#{obj[:category].gsub(" ", "_")}/#{obj[:type].gsub(" ", "_")}/#{obj[:name]}.sif"
       
       new_obj = ConfigurationObject.new(group: "Repository", category: obj[:category], type: obj[:type], name: obj[:name])
-      new_obj.update_source_with_xml sif_name, Crack::XML.parse(File.read(file_name))
+      new_obj.update_source_with_xml sif_name, Crack::XML.parse(File.read(file_name).gsub(/[0-9]+_?[A-Z]+\=/, 'xml__\0'))
       new_obj.create_indexes
 
       if obj[:config_obj_id]

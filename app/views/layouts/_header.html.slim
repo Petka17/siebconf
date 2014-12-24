@@ -12,6 +12,8 @@ nav.navbar role="navigation"
           = link_to "Infrastructure", "#{yield(:header_infrastructure_path)}"
         li class="#{yield(:header_configuration_class)}"
           = link_to "Configuration", "#{yield(:header_configuration_path)}"
+        li
+          = link_to "Tests", "#{yield(:header_configuration_path)}"
 
     .col-md-6.col-md-offset-1
       - flash.each do |key, value|
