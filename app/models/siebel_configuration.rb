@@ -42,14 +42,14 @@ class SiebelConfiguration
   end
 
   def compare_object_index new_repo_obj_index
-    repo_obj_index.each{ |obj| obj["change_flg"] = false }
+    repo_obj_index.each{ |obj| obj[:change_flg] = false }
 
     new_repo_obj_index.each do |obj|
-      curr_obj = repo_obj_index.detect{ |o| o["type"]==obj["type"] and o["name"]==obj["name"] }
+      curr_obj = repo_obj_index.detect{ |o| o[:type] == obj[:type] and o[:name] == obj[:name] }
       if curr_obj
-        curr_obj["change_flg"] = true
+        curr_obj[:change_flg] = true
       else
-        obj["change_flg"] = true
+        obj[:change_flg] = true
         repo_obj_index << obj
       end
     end
@@ -62,15 +62,15 @@ class SiebelConfiguration
     obj_str = ""
     obj_cat = {}
 
-    repo_obj_index.select{ |obj| obj["change_flg"] }.each do |obj|
-      name = obj["versions"] ? "#{obj["name"]}*" : obj["name"]
+    repo_obj_index.select{ |obj| obj[:change_flg] }.each do |obj|
+      name = obj[:versions] ? "#{obj[:name]}*" : obj[:name]
         
-      obj_str += "#{obj["type"]},#{name},c:\\temp\\siebel_configs\\#{id.to_s}\\#{obj["category"].gsub(" ", "_")}\\#{obj["type"].gsub(" ", "_")}\\#{obj["name"]}.sif\n"
+      obj_str += "#{obj[:type]},#{name},c:\\temp\\siebel_configs\\#{id.to_s}\\#{obj[:category].gsub(" ", "_")}\\#{obj[:type].gsub(" ", "_")}\\#{obj[:name]}.sif\n"
       
-      unless obj_cat[obj["category"]]
-        obj_cat[obj["category"]] = Set.new [obj["type"]]
+      unless obj_cat[obj[:category]]
+        obj_cat[obj[:category]] = Set.new [obj[:type]]
       else
-        obj_cat[obj["category"]] << obj["type"]
+        obj_cat[obj[:category]] << obj[:type]
       end
     end
 
@@ -91,30 +91,30 @@ class SiebelConfiguration
     
     path = "tmp/siebel_configs/#{id.to_s}"
 
-    repo_obj_index.select{ |obj| obj["change_flg"] }.each do |obj|
+    repo_obj_index.select{ |obj| obj[:change_flg] }.each do |obj|
       
-      sif_name = object_type_list.detect{ |t| t["category"] == obj["category"] and t["name"] == obj["type"] }["sif_name"]
-      file_name = "#{path}/#{obj["category"].gsub(" ", "_")}/#{obj["type"].gsub(" ", "_")}/#{obj["name"]}.sif"
+      sif_name = object_type_list.detect{ |t| t[:category] == obj[:category] and t[:name] == obj[:type] }[:sif_name]
+      file_name = "#{path}/#{obj[:category].gsub(" ", "_")}/#{obj[:type].gsub(" ", "_")}/#{obj[:name]}.sif"
       
-      new_obj = ConfigurationObject.new(group: "Repository", category: obj["category"], type: obj["type"], name: obj["name"])
+      new_obj = ConfigurationObject.new(group: "Repository", category: obj[:category], type: obj[:type], name: obj[:name])
       new_obj.update_source_with_xml sif_name, Crack::XML.parse(File.read(file_name).gsub(/[0-9]+_?[A-Z]+\=/, 'xml__\0'))
       new_obj.create_indexes
 
-      if obj["config_obj_id"]
-        orig_obj = ConfigurationObject.find(obj["config_obj_id"])
+      if obj[:config_obj_id]
+        orig_obj = ConfigurationObject.find(obj[:config_obj_id])
         
         if orig_obj
           orig_obj = orig_obj.clone
           orig_obj.create_indexes
           orig_obj.compare_with_object new_obj
           new_obj = orig_obj
-          obj["origin_config_obj_id"] = obj["config_obj_id"]
+          obj[:origin_config_obj_id] = obj[:config_obj_id]
         end
       end
       new_obj.upsert
 
-      obj["config_obj_id"] = new_obj.id.to_s
-      obj["sha1"]          = new_obj.sha1 
+      obj[:config_obj_id] = new_obj.id.to_s
+      obj[:sha1]          = new_obj.sha1 
     end
 
     upsert
@@ -136,9 +136,9 @@ class SiebelConfiguration
       obj_type_list.select{ |type| type[:category] == cat }.each do |type|
         k_c = 0
         type_node = { text: type[:name].pluralize, selectable: false, nodes: [] }
-        repo_obj_list.select{ |obj| obj["category"] == cat and obj["type"] == type[:name] }.each do |obj|
-          type_node[:nodes] << { text: obj["name"], color: "#{"#B24300" if obj["change_flg"]}", config_obj_id: "#{obj["config_obj_id"]}" }
-          k_c += 1 if obj["change_flg"]
+        repo_obj_list.select{ |obj| obj[:category] == cat and obj[:type] == type[:name] }.each do |obj|
+          type_node[:nodes] << { text: obj[:name], color: "#{"#B24300" if obj[:change_flg]}", config_obj_id: "#{obj[:config_obj_id]}" }
+          k_c += 1 if obj[:change_flg]
         end
         i += type_node[:nodes].size
         i_c += k_c

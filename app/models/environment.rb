@@ -73,7 +73,7 @@ class Environment
         rset = select_stmt.execute_query "SELECT DISTINCT #{column} FROM SIEBEL.#{obj_type[:table]} WHERE LAST_UPD >= TO_TIMESTAMP('#{last_upd}', 'DD.MM.YYYY HH24:MI:SS')#{add_cond}"
 
         while rset.next
-          repo_obj_index << { "category" => obj_type[:category], "type" => obj_type[:name], "name" => rset.getString(1), "versions" => versions }
+          repo_obj_index << { category: obj_type[:category], type: obj_type[:name], name: rset.getString(1), versions: versions }
         end
       end
 
