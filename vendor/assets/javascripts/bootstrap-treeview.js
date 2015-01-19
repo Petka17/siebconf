@@ -175,12 +175,16 @@
       
       if (node === this.selectedNode) {
         this.selectedNode = {};
+        this._render();
       }
       else {
-        this._triggerNodeSelectedEvent(this.selectedNode = node);
+        this.selectedNode = node
+        this._render();
+        this._triggerNodeSelectedEvent(node);
+        // this._triggerNodeSelectedEvent(this.selectedNode = node);
       }
       
-      this._render();
+      // this._render();
     },
 
     // On initialization recurses the entire tree structure 

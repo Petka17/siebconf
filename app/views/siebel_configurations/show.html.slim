@@ -23,5 +23,27 @@
 
 #hidden_data data-env_id="#{@environment.id.to_s}"
 
+.modal.fade#myModal tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"
+  .modal-dialog.modal-lg
+    .modal-content
+      .modal-header
+        button.close type="button" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true" &times;
+        h4.modal-title#myModalLabel Merge
+
+      .modal-body
+        .row
+          .col-md-6
+            h4 Original Value
+            #old-val
+              = text_area_tag "old_val", "old", class: "form-control", rows: "10", readonly: true
+          .col-md-6
+            h4 New Value
+            #new-val
+              = text_area_tag "new_val", "new", class: "form-control", rows: "10", readonly: true
+
+      .modal-footer
+        button.btn.btn-default type="button" data-dismiss="modal" Close
+
 = javascript_include_tag "get_objects_list"
 = javascript_include_tag "get_env_logs"
