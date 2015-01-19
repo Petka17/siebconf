@@ -54,4 +54,10 @@ class UploadRepoObjects
     puts "Upload completed"
   end
 
+  private
+
+    def puts_log message
+      $redis.publish("worker_logs:#{@env_id}", message)
+    end
+    
 end

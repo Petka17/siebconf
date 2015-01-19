@@ -44,6 +44,8 @@ Rails.application.routes.draw do
 
   resources :configuration_objects, only: [:show]
   
+  get '/enviroment_logs/:id' => 'workers#get_env_logs'
+
   mount Sidekiq::Web, at: '/sidekiq'
   
   # Example of regular route:

@@ -15,7 +15,9 @@ Moped::BSON = BSON
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module Vagrant
+require "lib/modules/redis_log"
+
+module Siebconf
   class Application < Rails::Application
 
     config.assets.enabled = true

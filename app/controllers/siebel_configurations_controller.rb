@@ -40,7 +40,7 @@ class SiebelConfigurationsController < ApplicationController
     @siebel_configuration = SiebelConfiguration.create_new_config(siebel_configuration_params)
 
     if @siebel_configuration.save
-      GetRepoObjectIndex.perform_async @siebel_configuration.id.to_s
+      PullChanges.perform_async @siebel_configuration.id.to_s
       flash[:info] = "Pulling process is started"
       redirect_to environment_siebel_configuration_path(@environment, @siebel_configuration)
     else
@@ -77,7 +77,7 @@ class SiebelConfigurationsController < ApplicationController
     @orig_siebel_configuration.upsert
 
     if run_job
-      PullChanges.perform_async @orig_siebel_configuration.id.to_s, @siebel_configuration.id.to_s
+      PushChanges.perform_async @orig_siebel_configuration.id.to_s, @siebel_configuration.id.to_s
     end
 
     redirect_to environment_siebel_configuration_path(@environment, @orig_siebel_configuration) 

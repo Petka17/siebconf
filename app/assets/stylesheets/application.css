@@ -44,3 +44,8 @@ body {
   max-width: 100%;
 }
 
+.log_message {
+  margin: 0px;
+  padding: 6px;
+}
+

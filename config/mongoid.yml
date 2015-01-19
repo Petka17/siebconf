@@ -5,7 +5,7 @@ development:
     default:
       # Defines the name of the default database that Mongoid can connect to.
       # (required).
-      database: vagrant_development
+      database: siebconf_dev
       # Provides the hosts the default session can connect to. Must be an array
       # of host:port pairs. (required)
       hosts:
@@ -58,7 +58,7 @@ development:
 test:
   sessions:
     default:
-      database: vagrant_test
+      database: siebconf_test
       hosts:
         - localhost:27017
       options:
@@ -71,7 +71,7 @@ test:
 production:
   sessions:
     default:
-      database: vagrant_production
+      database: siebconf_prod
       hosts:
         - localhost:27017
       options:
