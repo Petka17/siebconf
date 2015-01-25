@@ -1,0 +1,41 @@
+[
+  {
+    //export
+    "adm_data_type": "View",
+    "int_obj_name": "UDA View Access",
+
+    // check changes
+    "tables": [
+      {
+        "name": "S_APP_VIEW",
+        "id_column": "ROW_ID"
+      }
+    ],
+
+    // read and compare
+    "components": ["Feature Access"],
+    "name_fields": ["Name"]
+  },
+  {
+    //export
+    "adm_data_type": "Responsibility",
+    "int_obj_name": "UDA Responsibilities",
+
+    // check changes
+    "tables": [
+      {
+        "name": "S_RESP",
+        "id_column": "ROW_ID"
+      },
+      {
+        "name": "S_RESP",
+        "id_column": "ROW_ID"
+      }
+    ],
+
+    // read and compare
+    "components": ["Responsibility", "Feature Access"],
+    "name_fields": ["Name"]
+  }
+]
+
