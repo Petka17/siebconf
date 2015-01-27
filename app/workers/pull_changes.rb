@@ -11,21 +11,21 @@ class PullChanges
     
     env_id = environment.id.to_s
 
+    puts_log env_id, "Uncheck Change Objects"
+    siebel_configuration.uncheck_change_objects
+
     puts_log env_id, "Get Changed Object List"
-    new_repo_obj_index = environment.get_repo_obj_index
+    new_obj_index = environment.get_obj_index # Parameters: Date, Login
 
-    if new_repo_obj_index.size > 0
-      puts_log env_id, "Update Object index"
-      siebel_configuration.compare_object_index new_repo_obj_index
-
+    if new_obj_index.size > 0
       puts_log env_id, "Prepare for export"
-      siebel_configuration.prepare_for_export
+      environment.prepare_for_export new_obj_index, config_id #move to environment
 
       puts_log env_id, "Execute export"
-      environment.execute_export config_id
+      environment.execute_export new_obj_index, config_id
 
       puts_log env_id, "Upload Objects"
-      siebel_configuration.upload_objects
+      siebel_configuration.upload_objects new_obj_index
 
       environment.last_sync_date = DateTime.now
       environment.save
@@ -35,5 +35,4 @@ class PullChanges
       puts_log env_id, "No Changes Detected"
     end
   end
-
 end

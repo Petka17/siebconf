@@ -1,64 +1,68 @@
 {
-  "name": "Server Templates",
-  "values": [
+  "name": "",
+  "domain": "",
+  "ip": "",
+  "os": "",
+  "server_roles": [
     {
-      "name": "Base",
-      "source": {
-        "name": "",
-        "domain": "",
-        "ip": "",
-        "os": "",
-        "server_roles": [
-          {
-            "name": "Filesystem",
-            "parameters": {
-              "path": ""
-            }
-          },
-          {
-            "name": "Web",
-            "parameters": {
-              "SWEPath": ""
-            }
-          },
-          {
-            "name": "Siebel Gateway",
-            "parameters": {
-              "path": ""
-            }
-          },
-          {
-            "name": "Siebel Server",
-            "parameters": {
-              "path": "",
-              "roles": []
-            }
-          },
-          {
-            "name": "Siebel Tools",
-            "parameters": {
-              "path": ""
-            }
-          },
-          {
-            "name": "Database",
-            "parameters": {
-              "path": ""
-            }
-          }
-        ],
-        "java": {
-          "version": "",
-          "home_dir": ""
-        },
-        "oracle_client": {
-          "version": "",
-          "home_dir": ""
-        },
-        "ram": "",
-        "cpu": "",
-        "hdd": ""
+      "name": "Filesystem",
+      "parameters": {
+        "path": ""
+      }
+    },
+    {
+      "name": "Web",
+      "parameters": {
+        "SWEPath": ""
+      }
+    },
+    {
+      "name": "Siebel Gateway",
+      "parameters": {
+        "path": ""
+      }
+    },
+    {
+      "name": "Siebel Server",
+      "parameters": {
+        "path": "",
+        "roles": [
+
+        ]
+      }
+    },
+    {
+      "name": "Siebel Tools",
+      "parameters": {
+        "path": ""
+      }
+    },
+    {
+      "name": "Database",
+      "parameters": {
+        "path": "",
+        "port": ""
+      }
+    },
+    {
+      "name": "ADM Server",
+      "parameters": {
+        "adm_comp": "",
+        "export_path": ""
       }
     }
-  ]
+  ],
+  "java": {
+    "version": "",
+    "home_dir": ""
+  },
+  "oracle_client": {
+    "version": "",
+    "home_dir": ""
+  },
+  "ssh_user": "",
+  "ssh_password": "",
+  "ram": "",
+  "cpu": "",
+  "hdd": ""
 }

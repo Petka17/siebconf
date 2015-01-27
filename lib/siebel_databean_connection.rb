@@ -1,4 +1,4 @@
-# require 'java'
+require 'java'
 
 $CLASSPATH << "lib/java/Siebel_JavaDoc.jar"
 $CLASSPATH << "lib/java/Siebel.jar"
@@ -23,7 +23,7 @@ class SiebelConnection
     @conn.login url, user, passwd, locale
   end
 
-  attr_reader :user, :passwd, :url, :locale, :input, :output
+  attr_reader :url, :user, :passwd, :locale, :input, :output
 
   def logoff
     release
@@ -31,18 +31,19 @@ class SiebelConnection
     @conn.logoff
   end
 
+  def set_business_service name, method
+    @businessService = @conn.getService(name)
+    @method = method
+  end
+
   def set_input_properties properies
     @input = SiebelPropertySet.new unless @input
     properies.each { |key, value| @input.setProperty(key, value) }
   end
 
-  def set_business_service name
-    @businessService = @conn.getService(name)
-  end
-
-  def invoke_method name
+  def invoke_method
     @output = SiebelPropertySet.new unless @output
-    @businessService.invokeMethod(name, @input, @output)
+    @businessService.invokeMethod(@method, @input, @output)
   end
 
   def to_s

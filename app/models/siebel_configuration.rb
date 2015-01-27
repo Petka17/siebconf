@@ -36,122 +36,104 @@ class SiebelConfiguration
       siebel_configuration = SiebelConfiguration.new(siebel_configuration_params)
     end
 
-    siebel_configuration.status = "Updating Object Index"
-
     siebel_configuration
   end
 
-  def compare_object_index new_repo_obj_index
-    repo_obj_index.each{ |obj| obj[:change_flg] = false }
-
-    new_repo_obj_index.each do |obj|
-      curr_obj = repo_obj_index.detect{ |o| o[:type] == obj[:type] and o[:name] == obj[:name] }
-      if curr_obj
-        curr_obj[:change_flg] = true
-      else
-        obj[:change_flg] = true
-        repo_obj_index << obj
-      end
-    end
+  def uncheck_change_objects
+    self.repo_obj_index.each{ |obj| obj[:change_flg] = false }
+    self.admin_obj_index.each{ |obj| obj[:change_flg] = false }
+    self.master_data_index.each{ |obj| obj[:change_flg] = false }
   end
 
-  def prepare_for_export
-    path = "tmp/siebel_configs/#{id.to_s}"
-    system 'mkdir', '-p', path
-
-    obj_str = ""
-    obj_cat = {}
-
-    repo_obj_index.select{ |obj| obj[:change_flg] }.each do |obj|
-      name = obj[:versions] ? "#{obj[:name]}*" : obj[:name]
-        
-      obj_str += "#{obj[:type]},#{name},c:\\temp\\siebel_configs\\#{id.to_s}\\#{obj[:category].gsub(" ", "_")}\\#{obj[:type].gsub(" ", "_")}\\#{obj[:name]}.sif\n"
-      
-      unless obj_cat[obj[:category]]
-        obj_cat[obj[:category]] = Set.new [obj[:type]]
-      else
-        obj_cat[obj[:category]] << obj[:type]
-      end
-    end
-
-    obj_cat.each do |key, value|
-      system 'mkdir', '-p', "#{path}/#{key.gsub(" ", "_")}"
-      value.each do |type|
-        system 'mkdir', '-p', "#{path}/#{key.gsub(" ", "_")}/#{type.gsub(" ", "_")}"
-      end
-    end
+  def upload_objects new_obj_index
+    repo_type_list = Setting.get_value_source_for_name("Configuration Object Types", "Repository Objects")
+    adm_type_list  = Setting.get_value_source_for_name("Configuration Object Types", "ADM Objects")
     
-    File.open("tmp/siebel_configs/#{id.to_s}/obj.txt", 'w') { |f| f.write(obj_str) }
-  end
-
-  def upload_objects
-    require 'crack'
-
-    object_type_list = Setting.get_value_source_for_name("Configuration Object Types", "Repository Objects")
-    
-    path = "tmp/siebel_configs/#{id.to_s}"
-
-    repo_obj_index.select{ |obj| obj[:change_flg] }.each do |obj|
-      
-      sif_name = object_type_list.detect{ |t| t[:category] == obj[:category] and t[:name] == obj[:type] }[:sif_name]
-      file_name = "#{path}/#{obj[:category].gsub(" ", "_")}/#{obj[:type].gsub(" ", "_")}/#{obj[:name]}.sif"
-      
-      new_obj = ConfigurationObject.new(group: "Repository", category: obj[:category], type: obj[:type], name: obj[:name])
-      new_obj.update_source_with_xml sif_name, Crack::XML.parse(File.read(file_name).gsub(/[0-9]+_?[A-Z]+\=/, 'xml__\0'))
-      new_obj.create_indexes
-
-      if obj[:config_obj_id]
-        orig_obj = ConfigurationObject.find(obj[:config_obj_id])
-        
-        if orig_obj
-          orig_obj = orig_obj.clone
-          orig_obj.create_indexes
-          orig_obj.compare_with_object new_obj
-          new_obj = orig_obj
-          obj[:origin_config_obj_id] = obj[:config_obj_id]
-        end
-      end
-      new_obj.upsert
-
-      obj[:config_obj_id] = new_obj.id.to_s
-      obj[:sha1]          = new_obj.sha1 
-    end
+    process_new_objects new_obj_index[:repo], repo_type_list, "repo", self.repo_obj_index
+    process_new_objects new_obj_index[:adm].select{ |o| o[:group] == "admin"}, adm_type_list, "adm", self.admin_obj_index
+    process_new_objects new_obj_index[:adm].select{ |o| o[:group] == "master"}, adm_type_list, "adm", self.master_data_index
 
     upsert
   end
 
-  def transform_object_index
-    repo_obj_list = self.repo_obj_index || []
-    obj_type_list = Setting.get_value_source_for_name("Configuration Object Types", "Repository Objects")
-    obj_cat_list  = obj_type_list.map{ |o| o[:category] }.uniq
+  def process_new_objects obj_index, type_list, proc_type, config_obj_index
+    obj_index.each do |obj|
+      obj_meta = type_list.detect{ |t| t[:name] == obj[:type] }
 
-    repo_obj_tree = []
-    
-    j = 0
-    j_c = 0
-    obj_cat_list.each do |cat|
-      cat_node = { text: cat, selectable: false, nodes: [] }
-      i = 0
-      i_c = 0
-      obj_type_list.select{ |type| type[:category] == cat }.each do |type|
-        k_c = 0
-        type_node = { text: type[:name].pluralize, selectable: false, nodes: [] }
-        repo_obj_list.select{ |obj| obj[:category] == cat and obj[:type] == type[:name] }.each do |obj|
-          type_node[:nodes] << { text: obj[:name], color: "#{"#B24300" if obj[:change_flg]}", config_obj_id: "#{obj[:config_obj_id]}" }
-          k_c += 1 if obj[:change_flg]
-        end
-        i += type_node[:nodes].size
-        i_c += k_c
-        type_node[:tags] = [type_node[:nodes].size, k_c]
-        cat_node[:nodes] << type_node
+      new_obj = ConfigurationObject.new(category: obj[:category], type: obj[:type], name: obj[:name])
+      new_obj.process_config_object obj, id.to_s, obj_meta, proc_type
+
+      orig_index_obj = config_obj_index.detect{ |o| o[:type] == obj[:type] and o[:name] == obj[:name] }
+      
+      if orig_index_obj and orig_index_obj[:sha1] != new_obj[:sha1]
+        orig_obj = ConfigurationObject.find(orig_index_obj[:config_obj_id])
+        mod_obj = orig_obj.clone
+        mod_obj.create_indexes
+        mod_obj.compare_with_object new_obj
+        mod_obj.upsert
+        orig_index_obj = { category: obj[:category], type: obj[:type], name: mod_obj.name, config_obj_id: mod_obj.id.to_s, sha1: mod_obj[:sha1], change_flg: true }
+      else
+        new_obj.mark_new_obj
+        new_obj.upsert
+        config_obj_index << { category: obj[:category], type: obj[:type], name: new_obj.name, config_obj_id: new_obj.id.to_s, sha1: new_obj[:sha1], change_flg: true }
       end
-      j += i
-      j_c += i_c
-      cat_node[:tags] = [i, i_c]
-      repo_obj_tree << cat_node
-    end
-
-    [ { text: "Repository Objects", selectable: false, tags: [j, j_c], nodes: repo_obj_tree } ]
+    end    
   end
 
+  def transform_object_index
+    repo_type_list = Setting.get_value_source_for_name("Configuration Object Types", "Repository Objects")
+    adm_type_list  = Setting.get_value_source_for_name("Configuration Object Types", "ADM Objects")
+
+    [ 
+      create_node_structure(self.repo_obj_index, repo_type_list, "Repository Objects"),
+      create_node_structure(self.admin_obj_index, adm_type_list.select{ |obj| obj[:group] == "admin" }, "Adminstration Objects"),
+      create_node_structure(self.master_data_index, adm_type_list.select{ |obj| obj[:group] == "master" }, "Master Data")
+    ]
+  end
+
+  private
+
+    def create_node_structure obj_list, type_list, group
+      obj_index_tree = create_obj_index_tree type_list
+
+      group_nodes = []
+
+      j = 0
+      j_c = 0
+      obj_index_tree.each do |category, types|
+        category_node = { text: category, selectable: false, nodes: [] }
+        i = 0
+        i_c = 0
+        types.each do |type|
+          k_c = 0
+          type_node = { text: type.pluralize, selectable: false, nodes: [] }
+          obj_list.select{ |obj| obj[:category] == category and obj[:type] == type }.each do |obj|
+            type_node[:nodes] << { text: obj[:name], color: "#{"#B24300" if obj[:change_flg]}", config_obj_id: "#{obj[:config_obj_id]}" }
+            k_c += 1 if obj[:change_flg]
+          end
+          i += type_node[:nodes].size
+          i_c += k_c
+          type_node[:tags] = [type_node[:nodes].size, k_c]
+          category_node[:nodes] << type_node
+        end
+        j += i
+        j_c += i_c
+        category_node[:tags] = [i, i_c]
+        group_nodes << category_node
+      end
+
+      { text: group, selectable: false, tags: [j, j_c], nodes: group_nodes }
+    end
+
+    def create_obj_index_tree obj_type_list
+      obj_cat = {}
+      obj_type_list.each do |obj|
+        unless obj_cat[obj[:category]]
+          obj_cat[obj[:category]] = Set.new [obj[:name]]
+        else
+          obj_cat[obj[:category]] << obj[:name]
+        end
+      end
+      obj_cat
+    end
 end
