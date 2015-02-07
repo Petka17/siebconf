@@ -1,4 +1,4 @@
-class PushChanges
+class PushWorker
 
   include Sidekiq::Worker
 

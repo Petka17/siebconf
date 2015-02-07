@@ -1,10 +1,10 @@
 class SiebelConfigurationsController < ApplicationController
 
   before_filter :get_environments,          only: [:index, :show, :edit, :update, :new_pull, :new_push]
-  before_filter :get_environment,           only: [:index, :show, :edit, :update, :new_pull, :create_pull, :new_push]
+  before_filter :get_environment,           only: [:index, :show, :edit, :update, :new_pull, :create_pull, :new_push, :create_push]
 
   before_filter :get_siebel_configurations, only: [:index, :show, :edit, :update, :new_pull, :new_push]
-  before_filter :get_siebel_configuration,  only: [:show, :edit, :update, :new_push, :create_push]
+  before_filter :get_siebel_configuration,  only: [:show, :edit, :update, :new_push, :create_push, :get_object_index]
 
   def index
     if @siebel_configurations.count() > 0
@@ -40,7 +40,7 @@ class SiebelConfigurationsController < ApplicationController
     @siebel_configuration = SiebelConfiguration.create_new_config(siebel_configuration_params)
 
     if @siebel_configuration.save
-      PullChanges.perform_async @siebel_configuration.id.to_s
+      PullWorker.perform_async @siebel_configuration.id.to_s
       flash[:info] = "Pulling process is started"
       redirect_to environment_siebel_configuration_path(@environment, @siebel_configuration)
     else
@@ -77,14 +77,13 @@ class SiebelConfigurationsController < ApplicationController
     @orig_siebel_configuration.upsert
 
     if run_job
-      PushChanges.perform_async @orig_siebel_configuration.id.to_s, @siebel_configuration.id.to_s
+      PushWorker.perform_async @orig_siebel_configuration.id.to_s, @siebel_configuration.id.to_s
     end
 
     redirect_to environment_siebel_configuration_path(@environment, @orig_siebel_configuration) 
   end
 
   def get_object_index
-    @siebel_configuration = SiebelConfiguration.find(params[:id])
     render json: @siebel_configuration.transform_object_index.to_json if @siebel_configuration
   end
 
@@ -122,7 +121,7 @@ class SiebelConfigurationsController < ApplicationController
     end
 
     def siebel_configuration_params
-      params.require(:siebel_configuration).permit(:version, :description, :environment_id)
+      params.require(:siebel_configuration).permit(:version, :description, :environment_id, :from_date, :from_time)
     end
     
 end

@@ -24,6 +24,9 @@ gem 'mongoid', '~> 4.0.0'
 # XML Parsing
 gem 'crack'
 
+# Parse config
+gem 'parseconfig', '~> 1.0.6'
+
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 gem 'therubyrhino', '~> 2.0.4'
 
@@ -42,11 +45,12 @@ gem 'jbuilder', '~> 2.0'
 # Use puma as the app server
 gem 'puma', '~> 2.10.2'
 
+
+
 # Background jobs
 gem 'sidekiq', '~> 3.3.0'
 gem 'sinatra', require: false
 
-gem 'pry-rails'
 
 # Use Capistrano for deployment
 group :development do
@@ -67,7 +71,10 @@ group :development do
 
     # Rails Panel
   gem 'meta_request', '~> 0.3.4'
-  
+
+  # Pry
+  gem 'pry-rails'
+
 end
 
 

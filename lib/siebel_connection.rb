@@ -1,6 +1,5 @@
 require 'java'
 
-$CLASSPATH << "lib/java/Siebel_JavaDoc.jar"
 $CLASSPATH << "lib/java/Siebel.jar"
 $CLASSPATH << "lib/java/SiebelJI_enu.jar"
 

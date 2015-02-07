@@ -37,5 +37,7 @@ module Siebconf
     # config.i18n.default_locale = :de
 
     config.assets.initialize_on_precompile = false
+
+    config.autoload_paths += %W(#{config.root}/app)
   end
 end

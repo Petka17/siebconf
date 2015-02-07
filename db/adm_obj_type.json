@@ -56,6 +56,97 @@
     },
 
     "name_fields": ["Name"]
+  },
+  {
+    "group": "admin",
+    "category": "Dictionaries",
+    "name": "LOV",
+
+    // check changes
+    "tables": [
+      {
+        "name": "S_LST_OF_VAL",
+        "id_column": "ROW_ID"
+      },
+      {
+        "name": "S_LST_OF_VAL",
+        "id_column": "PAR_ROW_ID"
+      }
+    ],
+
+    // read and compare
+    "int_obj_name": "UDA List Of Values",
+    "int_obj_name_xml": "UDA_spcList_spcOf_spcValues",
+
+    "components": { 
+      "name": "List Of Values Parent (UDA)",
+      "name_xml": "List_spcOf_spcValues_spcParent_spc(UDA)",
+      "child":[ 
+        {
+          "name": "List Of Values Child (UDA)",
+          "name_xml": "List_spcOf_spcValues_spcChild_spc(UDA)"
+        } 
+      ]
+    },
+
+    "name_fields": ["Name"]
+  },
+  {
+    "group": "admin",
+    "category": "Run-Time Events",
+    "name": "Personalization - Actions",
+
+    // check changes
+    "tables": [
+      {
+        "name": "S_CT_ACTION_SET",
+        "id_column": "ROW_ID"
+      },
+      {
+        "name": "S_CT_ACTION",
+        "id_column": "CT_ACTN_SET_ID"
+      }
+    ],
+
+    // read and compare
+    "int_obj_name": "Personalization Actions",
+    "int_obj_name_xml": "Personalization_spcActions",
+
+    "components": { 
+      "name": "Personalization Action Set",
+      "name_xml": "Personalization_spcAction_spcSet",
+      "child":[ 
+        {
+          "name": "Personalization Action",
+          "name_xml": "Personalization_spcAction"
+        } 
+      ]
+    },
+
+    "name_fields": ["Name"]
+  },
+  {
+    "group": "admin",
+    "category": "Run-Time Events",
+    "name": "Personalization - Events",
+
+    // check changes
+    "tables": [
+      {
+        "name": "S_CT_EVENT",
+        "id_column": "ROW_ID"
+      }
+    ],
+
+    // read and compare
+    "int_obj_name": "Personalization Actions",
+    "int_obj_name_xml": "Personalization_spcActions",
+
+    "components": { 
+      "name": "Personalization Event",
+      "name_xml": "Personalization_spcEvent"
+    },
+
+    "name_fields": ["Event", "Object Name", "Object Type", "Sequence", "Sub-Event"]
   }
 ]
-
