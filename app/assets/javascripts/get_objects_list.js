@@ -18,15 +18,20 @@ var showMergeUI = function(event, node) {
 
 var getObjectDesc = function(event, node) {
   console.log(node);
-  var ref = node.config_obj_id;
-  if (ref != "")
-  {
-    $.get(
-      "/configuration_objects/" + ref, 
-      function(data) { 
-        $('#object_desc').treeview({ data: data, showTags: true, onNodeSelected: showMergeUI});
-      });
+  var obj_ref = node.config_obj_id;
+  var diff_ref = node.diff_id;
+
+  if (diff_ref != "") {
+    link = '/diff_tree_format/' + diff_ref;
+  } else {
+    link = '/object_tree_format/' + obj_ref;
   }
+
+  $.get(
+    link, 
+    function(data) { 
+      $('#object_desc').treeview({ data: data, showTags: true, onNodeSelected: showMergeUI});
+    });
 }
 
 $(function(){

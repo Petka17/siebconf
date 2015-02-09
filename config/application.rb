@@ -15,8 +15,6 @@ Moped::BSON = BSON
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-require "lib/modules/redis_log"
-
 module Siebconf
   class Application < Rails::Application
 
@@ -38,6 +36,6 @@ module Siebconf
 
     config.assets.initialize_on_precompile = false
 
-    config.autoload_paths += %W(#{config.root}/app)
+    config.autoload_paths += %W(#{config.root}/app/services)
   end
 end

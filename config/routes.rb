@@ -17,12 +17,12 @@ Rails.application.routes.draw do
   
   resources :environments do
     collection do
-      get 'edit_order'
+      get  'edit_order'
       post 'update_order'
     end
     
     member do
-      get 'edit_server_roles'
+      get  'edit_server_roles'
       post 'update_server_roles'
     end
 
@@ -30,19 +30,22 @@ Rails.application.routes.draw do
    
     resources :siebel_configurations, only: [:index, :show, :edit, :update] do
       collection do
-        get 'new_pull'
+        get  'new_pull'
         post 'create_pull'
       end
 
       member do
-        get 'get_object_index'
-        get 'new_push'
+        get  'get_object_index'
+        get  'new_push'
         post 'create_push'
       end 
     end
   end
 
-  resources :configuration_objects, only: [:show]
+  # resources :configuration_objects, only: [:show]
+
+  get '/object_tree_format/:id' => 'object_tree_formats#get_object_tree'
+  get '/diff_tree_format/:id'   => 'object_tree_formats#get_diff_tree'
   
   get '/enviroment_logs/:id' => 'workers#get_env_logs'
 

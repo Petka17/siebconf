@@ -54,37 +54,37 @@ class SiebelConfigurationsController < ApplicationController
   end
 
   def create_push
-    @environment  = Environment.where(name: params[:siebel_configuration][:environment]).first
+    # @environment  = Environment.where(name: params[:siebel_configuration][:environment]).first
 
-    unless @environment
-      flash[:info] = "There is no requested enviroment"
-      redirect_to environments_path 
-    end
+    # unless @environment
+    #   flash[:info] = "There is no requested enviroment"
+    #   redirect_to environments_path 
+    # end
 
-    @orig_siebel_configuration = SiebelConfiguration.get_config_by_env_id(@environment.id.to_s).first
+    # @orig_siebel_configuration = SiebelConfiguration.get_config_by_env_id(@environment.id.to_s).first
 
-    if @orig_siebel_configuration
-      @orig_siebel_configuration = @orig_siebel_configuration.clone
-      run_job = true
-    else
-      @orig_siebel_configuration = @siebel_configuration.clone
-      @orig_siebel_configuration.repo_obj_index.each{ |e| e[:change_flg] = true }
-    end
+    # if @orig_siebel_configuration
+    #   @orig_siebel_configuration = @orig_siebel_configuration.clone
+    #   run_job = true
+    # else
+    #   @orig_siebel_configuration = @siebel_configuration.clone
+    #   @orig_siebel_configuration.repo_obj_index.each{ |e| e[:change_flg] = true }
+    # end
 
-    @orig_siebel_configuration.version        = params[:siebel_configuration][:version]
-    @orig_siebel_configuration.description    = params[:siebel_configuration][:description]
-    @orig_siebel_configuration.environment_id = @environment.id
-    @orig_siebel_configuration.upsert
+    # @orig_siebel_configuration.version        = params[:siebel_configuration][:version]
+    # @orig_siebel_configuration.description    = params[:siebel_configuration][:description]
+    # @orig_siebel_configuration.environment_id = @environment.id
+    # @orig_siebel_configuration.upsert
 
-    if run_job
-      PushWorker.perform_async @orig_siebel_configuration.id.to_s, @siebel_configuration.id.to_s
-    end
+    # if run_job
+    #   PushWorker.perform_async @orig_siebel_configuration.id.to_s, @siebel_configuration.id.to_s
+    # end
 
-    redirect_to environment_siebel_configuration_path(@environment, @orig_siebel_configuration) 
+    # redirect_to environment_siebel_configuration_path(@environment, @orig_siebel_configuration) 
   end
 
   def get_object_index
-    render json: @siebel_configuration.transform_object_index.to_json if @siebel_configuration
+    render json: ObjectIndexFormat.new(@siebel_configuration).transform_object_index if @siebel_configuration
   end
 
   private

@@ -49,6 +49,10 @@ class Environment
     servers.detect{ |s| s.server_roles.detect{ |sr| sr[:name] == "Siebel Tools" } }
   end
 
+  def get_tools_role
+    server_roles.detect{ |sr| sr.name == "Siebel Tools" }
+  end
+
   def get_adm_server
     servers.detect{ |s| s.server_roles.detect{ |sr| sr[:name] == "ADM Server" } }
   end

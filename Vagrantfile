@@ -19,7 +19,8 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     # argument is a set of non-required options.
     # sc.vm.synced_folder ".", "/var/www/siebconf"
     # sc.vm.synced_folder "/", "/mac"
-
+    sc.vm.synced_folder '.', '/vagrant', disabled: true
+    sc.vm.synced_folder '.', '/home/vagrant/siebconf'
 
     sc.vm.provider "virtualbox" do |vb|
       vb.name = "siebconfig"

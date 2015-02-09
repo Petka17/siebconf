@@ -17,20 +17,22 @@ class SiebelExport
     @siebel_configuration = SiebelConfiguration.find(@config_id)
     @environment = Environment.find(@siebel_configuration.environment_id)
 
-    @database_server = @environment.get_database_server
     @database_role   = @environment.get_database_role
-
+    @database_server = @environment.get_database_server
     @gateway_role    = @environment.get_gateway_role
-
-    @new_obj_index = {repo: [], adm: []}
+    @tools_role      = @environment.get_tools_role
+    @tools_server    = @environment.get_tools_server
+    @adm_server      = @environment.get_adm_server
   end
 
   def get_changes
+    @new_obj_index = {repo: [], adm: []}
+
     last_upd  = @environment.last_sync_date ? @environment.last_sync_date.strftime("%d.%m.%Y %H:%M:%S") : "01.10.2014 00:00:00"
 
-    user    = @database_role[:parameters][:user]
+    user   = @database_role[:parameters][:user]
     passwd = @database_role[:parameters][:password]
-    port = @database_server.server_roles.detect{ |sr| sr[:name] == "Database" }[:parameters][:port]
+    port   = @database_server.server_roles.detect{ |sr| sr[:name] == "Database" }[:parameters][:port]
 
     url  = "jdbc:oracle:thin:@#{@database_server[:ip]}:#{port}:#{@database_role[:parameters][:db_name]}"
     
@@ -52,7 +54,7 @@ class SiebelExport
       end
       
       # Get ADM Object Changes
-      unless (@gateway_role[:version] =~ /^8\.0.+/).nil?
+      unless (@gateway_role[:version] =~ /^8\..+/).nil?
         ## TODO Export Previous ADM objects ##
         @adm_obj_types.each do |obj_type|
           sql = []
@@ -74,6 +76,8 @@ class SiebelExport
     ensure
       conn.close_connection if conn
     end
+
+    @last_sync_date = DateTime.now.utc
   end
 
   def prepare
@@ -112,13 +116,13 @@ class SiebelExport
     tools_path = @tools_server.server_roles.detect{ |sr| sr[:name] == "Siebel Tools" }[:parameters][:path]
     
     # Command-line export through Siebel Tools
-    command_str  = "#{tools_path}\\BIN\\siebdev.exe " # Siebel Tools executable
-    command_str += "/c #{tools_path}\\BIN\\ENU\\tools.cfg " # Siebel Tools cfg file
-    command_str += "/u #{user} /p #{passwd} /d ServerDataSrc " # Credentials and Datasource
-    command_str += "/batchexport \"Siebel Repository\" " # Siebel Repository
-    command_str += "c:\\temp\\siebel_configs\\#{@config_id}\\repo\\obj.txt " # Export Object list 
+    command_str  = "#{tools_path}\\BIN\\siebdev.exe "          # Siebel Tools executable
+    command_str += "/c #{tools_path}\\BIN\\ENU\\tools.cfg "    # Siebel Tools cfg file
+    command_str += "/u #{user} /p #{passwd} /d ServerDataSrc " # User Credentials and Datasource
+    command_str += "/batchexport \"Siebel Repository\" "       # Siebel Repository
+    command_str += "c:\\temp\\siebel_configs\\#{@config_id}\\repo\\obj.txt "    # Export Object list 
     command_str += "c:\\temp\\siebel_configs\\#{@config_id}\\repo\\export.log " # Export Logs
-    command_str += "| echo" # For syncronize export execute
+    command_str += "| echo" # For syncronize export execution
 
     adm_server_params = @adm_server.server_roles.detect{ |sr| sr[:name] == "ADM Server" }[:parameters]
     
@@ -153,19 +157,19 @@ class SiebelExport
       # ssh.scp.download! "c:\\temp\\siebel_configs\\#{@config_id}", "tmp/siebel_configs", recursive: true
     end
     # Copy Everithing Back to the Smart Config server
-    system "scp -r #{tools_server[:ip]}:c:\\\\temp\\\\siebel_configs\\\\#{@config_id} tmp/siebel_configs"
+    system "scp -r #{@tools_server[:ip]}:c:\\\\temp\\\\siebel_configs\\\\#{@config_id} tmp/siebel_configs"
   end
 
-  def upload new_obj_index
+  def upload
     # Uncheck Changed Objects
     @siebel_configuration.repo_obj_index.each{ |obj| obj[:change_flg] = false }
     @siebel_configuration.admin_obj_index.each{ |obj| obj[:change_flg] = false }
     @siebel_configuration.master_data_index.each{ |obj| obj[:change_flg] = false }
 
     # Process each type of object
-    process_new_objects @new_obj_index[:repo], @repo_type_list, "repo", @siebel_configuration.repo_obj_index
-    process_new_objects @new_obj_index[:adm].select{ |o| o[:group] == "admin"},  @adm_type_list, "adm", @siebel_configuration.admin_obj_index
-    process_new_objects @new_obj_index[:adm].select{ |o| o[:group] == "master"}, @adm_type_list, "adm", @siebel_configuration.master_data_index
+    process_new_objects @new_obj_index[:repo], @repo_obj_types, "repo", @siebel_configuration.repo_obj_index
+    process_new_objects @new_obj_index[:adm].select{ |o| o[:group] == "admin"},  @adm_obj_types, "adm", @siebel_configuration.admin_obj_index
+    process_new_objects @new_obj_index[:adm].select{ |o| o[:group] == "master"}, @adm_obj_types, "adm", @siebel_configuration.master_data_index
 
     # Save Siebel Configuration
     @siebel_configuration.upsert
@@ -176,27 +180,26 @@ class SiebelExport
       obj_meta = type_list.detect{ |t| t[:name] == obj[:type] }
 
       new_obj = ConfigurationObject.new(category: obj[:category], type: obj[:type], name: obj[:name])
-      new_obj.process_config_object obj, id.to_s, obj_meta, proc_type
+      new_obj.process_config_object obj, @config_id, obj_meta, proc_type
+      new_obj.upsert
 
       orig_index_obj = config_obj_index.detect{ |o| o[:type] == new_obj[:type] and o[:name] == new_obj[:name] }
       
-      if orig_index_obj and orig_index_obj[:sha1] != new_obj[:sha1]
-        orig_obj = ConfigurationObject.find(orig_index_obj[:config_obj_id])
-        mod_obj = orig_obj.clone
-        mod_obj.create_indexes
-        mod_obj.compare_with_object new_obj
-        mod_obj.upsert
-        orig_index_obj = { category: obj[:category], type: obj[:type], name: mod_obj.name, config_obj_id: mod_obj.id.to_s, sha1: mod_obj[:sha1], change_flg: true }
+      if orig_index_obj 
+        unless orig_index_obj[:sha1] == new_obj[:sha1]
+          orig_obj = ConfigurationObject.find(orig_index_obj[:config_obj_id])
+          diff = ObjectDiff.new(source: orig_obj.source.dup)
+          diff.execute! new_obj.source
+          orig_index_obj.merge!(obj_in_index(new_obj)).merge!({ diff_id: diff.id.to_s })
+        end
       else
-        new_obj.mark_new_obj
-        new_obj.upsert
-        config_obj_index << { category: obj[:category], type: obj[:type], name: new_obj.name, config_obj_id: new_obj.id.to_s, sha1: new_obj[:sha1], change_flg: true }
+        config_obj_index << obj_in_index(new_obj)
       end
-    end    
+    end
   end
   
   def finish
-    @environment.last_sync_date = DateTime.now
+    @environment.last_sync_date = @last_sync_date || DateTime.now.utc
     @environment.save
   end
 
@@ -221,6 +224,17 @@ class SiebelExport
           system 'mkdir', '-p', "#{path}/#{key.gsub(" ", "_")}/#{type.gsub(" ", "_")}"
         end
       end
+    end
+
+    def obj_in_index obj
+      { 
+        category:      obj.category, 
+        type:          obj.type, 
+        name:          obj.name, 
+        sha1:          obj.sha1, 
+        config_obj_id: obj.id.to_s, 
+        change_flg:    true 
+      }
     end
 
 end

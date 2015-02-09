@@ -40,7 +40,7 @@ class ConfigurationObject
   def create_indexes
     delete_system_fields self.source
     create_indexes_for_object self.source
-    self.sha1 = Digest::SHA1.hexdigest(self.source.map{ |e| e["_sha1_obj"] }.join)
+    self.sha1 = Digest::SHA1.hexdigest(self.source.map{ |e| e["_sha1_elem"] }.join)
   end
 
   def transform_object
@@ -108,11 +108,11 @@ class ConfigurationObject
         e.get_array_attr.each do |key, value|
           value.sort_by!{ |elem| elem["NAME"] }
           create_indexes_for_object value
-          child_sha1["_sha1_#{key}"] = Digest::SHA1.hexdigest(value.map{ |e| e["_sha1_obj"] }.join)
+          child_sha1["_sha1_#{key}"] = Digest::SHA1.hexdigest(value.map{ |e| e["_sha1_elem"] }.join)
         end
         e.merge!(child_sha1) unless child_sha1.empty?
 
-        e["_sha1_obj"] = if child_sha1.empty?
+        e["_sha1_elem"] = if child_sha1.empty?
           e["_sha1_attr"]
         else
           Digest::SHA1.hexdigest(e["_sha1_attr"] + child_sha1.to_s)
@@ -120,52 +120,4 @@ class ConfigurationObject
       end
     end
 
-    def gen_elem obj
-      obj.map do |o|
-        { 
-          text: o["NAME"].nil? ? o["Name"] : o["NAME"], 
-          selectable: (!o["_changed_obj"].nil? and o["_changed_obj"]), 
-          color: "#{"#B24300" if o["_changed_obj"]}", 
-          icon: "glyphicon glyphicon-th", 
-          nodes: gen_nodes(o), 
-          tags: (["D"] if o["_delete_obj"]),
-          node_type: "elem"
-        }  
-      end
-    end
-
-    def gen_nodes obj
-      [{ 
-        text: "ATTRIBUTES", 
-        selectable: (!obj["_changed_attr"].nil? and obj["_changed_attr"]), 
-        color: "#{"#B24300" if obj['_changed_attr']}", 
-        icon: "glyphicon glyphicon-list", 
-        nodes: get_node_attr(obj),
-        node_type: "fields"
-      }] +
-      obj.get_array_attr.map do |key, value|
-        { 
-          text: key, 
-          selectable: (!obj["_changed_#{key}"].nil? and obj["_changed_#{key}"]), 
-          color: "#{"#B24300" if obj["_changed_" + key]}", 
-          icon: "glyphicon glyphicon-folder-close", 
-          nodes: gen_elem(value),
-          node_type: "child"
-        }
-      end
-    end
-
-    def get_node_attr obj
-      obj.get_string_attr.map do |key, value|
-        { 
-          text: "#{key.gsub('xml__', '')}: #{value}", 
-          selectable: !obj["_new_#{key}"].nil?, 
-          color: "#{"#B24300" if !obj["_new_" + key].nil?}", 
-          icon: "glyphicon glyphicon-tag",
-          old_value: obj["_orig_#{key}"],
-          new_value: obj["_new_#{key}"],
-          node_type: "param"
-        }
-      end
-    end
 end

@@ -73,7 +73,14 @@ group :development do
   gem 'meta_request', '~> 0.3.4'
 
   # Pry
-  gem 'pry-rails'
+  gem 'pry-rails', '~> 0.3.2'
+  gem 'pry-nav', '~> 0.2.4'
+  # gem 'ruby-debug-pry', '~> 0.0.3'
+  gem 'pry-developer_tools', '~> 0.1.1'
+  gem 'rack-webconsole-pry', '~> 0.1.9'
+  gem 'pry-coolline', '~> 0.2.5'
+  gem 'pry-highlight', '~> 0.1.0'
+  gem 'pry-awesome_print', '~> 9.6.9'
 
 end
 
