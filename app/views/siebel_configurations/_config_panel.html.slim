@@ -9,12 +9,12 @@
                 = button_to "Edit", "/environments/#{environment.id.to_s}/siebel_configurations/#{siebel_configuration.id.to_s}/edit", method: :get, class: "form-control", form_class: "form-inline"
             td
               = button_to "Pull Configuration", new_pull_environment_siebel_configurations_path(environment), method: :get, class: "form-control", form_class: "form-inline"
-            td
-              - unless pull_flg or siebel_configuration.nil?
-                = button_to "Push Configuration", "/environments/#{environment.id.to_s}/siebel_configurations/#{siebel_configuration.id.to_s}/new_push", method: :get, class: "form-control", form_class: "form-inline"
-            td
-              - unless pull_flg or siebel_configuration.nil?
-                = button_to "Deploy Patch", "/environments/#{environment.id.to_s}/siebel_configurations/#{siebel_configuration.id.to_s}/new_push", method: :get, class: "form-control", form_class: "form-inline"
+            /td
+            /  - unless pull_flg or siebel_configuration.nil?
+            /    = button_to "Push Configuration", "/environments/#{environment.id.to_s}/siebel_configurations/#{siebel_configuration.id.to_s}/new_push", method: :get, class: "form-control", form_class: "form-inline"
+            /td
+            /  - unless pull_flg or siebel_configuration.nil?
+            /    = button_to "Deploy Patch", "/environments/#{environment.id.to_s}/siebel_configurations/#{siebel_configuration.id.to_s}/new_push", method: :get, class: "form-control", form_class: "form-inline"
       .col-md-5
       /  = content_tag :div, class: "log_message alert alert-info", id: "logs" do
       /    p Logs
