@@ -3,6 +3,7 @@
     "group": "admin",
     "category": "View Access",
     "name": "View",
+    "adm_type": "View",
 
     // check changes
     "tables": [
@@ -18,15 +19,15 @@
 
     "components": { 
       "name": "Feature Access", 
-      "name_xml": "Feature_spcAccess" 
-    },
-
-    "name_fields": ["Name"]
+      "name_xml": "Feature_spcAccess",
+      "user_key_fields": ["Name"]
+    }
   },
   {
     "group": "admin",
     "category": "View Access",
     "name": "Responsibility",
+    "adm_type": "Responsibility",
 
     // check changes
     "tables": [
@@ -47,30 +48,34 @@
     "components": { 
       "name": "Responsibility",
       "name_xml": "Responsibility",
+      "user_key_fields": ["Name"],
       "child":[ 
         {
           "name": "Feature Access",
-          "name_xml": "Feature_spcAccess"
+          "name_xml": "Feature_spcAccess",
+          "user_key_fields": ["Name"]
         } 
       ]
-    },
-
-    "name_fields": ["Name"]
+    }
   },
   {
     "group": "admin",
     "category": "Dictionaries",
     "name": "LOV",
+    "adm_type": "LOV",
+    "adm_field": "Name",
 
     // check changes
     "tables": [
       {
         "name": "S_LST_OF_VAL",
-        "id_column": "ROW_ID"
+        "id_column": "NAME",
+        "condition": "TYPE = 'LOV_TYPE' AND (CODE <> 'CLASS' OR CODE IS NULL)"
       },
       {
         "name": "S_LST_OF_VAL",
-        "id_column": "PAR_ROW_ID"
+        "id_column": "TYPE",
+        "condition": "TYPE <> 'LOV_TYPE' AND (CODE <> 'CLASS' OR CODE IS NULL)"
       }
     ],
 
@@ -79,22 +84,23 @@
     "int_obj_name_xml": "UDA_spcList_spcOf_spcValues",
 
     "components": { 
-      "name": "List Of Values Parent (UDA)",
-      "name_xml": "List_spcOf_spcValues_spcParent_spc(UDA)",
+      "name": "List Of Values",
+      "name_xml": "List_spcOf_spcValues_spcParent_spc_lprUDA_rpr",
+      "user_key_fields": ["Name"],
       "child":[ 
         {
-          "name": "List Of Values Child (UDA)",
-          "name_xml": "List_spcOf_spcValues_spcChild_spc(UDA)"
+          "name": "Values",
+          "name_xml": "List_spcOf_spcValues_spcChild_spc_lprUDA_rpr",
+          "user_key_fields": ["Name", "Language", "Sub_spcType"]
         } 
       ]
-    },
-
-    "name_fields": ["Name"]
+    }
   },
   {
     "group": "admin",
     "category": "Run-Time Events",
     "name": "Personalization - Actions",
+    "adm_type": "JET Personalization - Actions",
 
     // check changes
     "tables": [
@@ -115,16 +121,18 @@
     "components": { 
       "name": "Personalization Action Set",
       "name_xml": "Personalization_spcAction_spcSet",
+      "user_key_fields": ["Name"],
       "child":[ 
         {
           "name": "Personalization Action",
-          "name_xml": "Personalization_spcAction"
+          "name_xml": "Personalization_spcAction",
+          "user_key_fields": ["Name"]
         } 
       ]
-    },
+    }
+  }]
 
-    "name_fields": ["Name"]
-  },
+  ,
   {
     "group": "admin",
     "category": "Run-Time Events",

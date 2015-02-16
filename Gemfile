@@ -82,6 +82,8 @@ group :development do
   gem 'pry-highlight', '~> 0.1.0'
   gem 'pry-awesome_print', '~> 9.6.9'
 
+  gem 'rubocop', require: false
+  
 end
 
 

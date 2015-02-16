@@ -1,5 +1,5 @@
+# Siebel Configuration which includes the object index for all type of objects
 class SiebelConfiguration
-
   include Mongoid::Document
   include Mongoid::Timestamps
   
@@ -24,11 +24,11 @@ class SiebelConfiguration
   index({ environment_id: 1, version: 1, description: 1}, { unique: true })
   index({ created_at: -1 })
 
-  def self.get_config_by_env_id environment_id
+  def self.get_config_by_env_id(environment_id)
     where(environment_id: environment_id).desc(:created_at)
   end
 
-  def self.create_new_config siebel_configuration_params
+  def self.create_new_config(siebel_configuration_params)
     last_siebel_configuration = SiebelConfiguration.get_config_by_env_id(siebel_configuration_params[:environment_id]).first()
 
     if last_siebel_configuration
@@ -42,5 +42,4 @@ class SiebelConfiguration
 
     siebel_configuration
   end
-
 end

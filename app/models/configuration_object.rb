@@ -29,9 +29,8 @@ class ConfigurationObject
       file_name = Dir.glob("#{path}/#{obj[:category].gsub(" ", "_")}/#{obj[:type].gsub(" ", "_")}/#{obj[:id]}*#{obj[:type]}.xml")[0]
       xml = Crack::XML.parse(File.read(file_name))
       xml_source = xml["SiebelMessage"]["EAIMessage"]["ListOf#{obj_meta[:int_obj_name_xml]}"]["#{obj_meta[:components]["name_xml"]}"]
-      name_fields = obj_meta[:name_fields].map{ |elem| xml_source["_sblesc_und_undPROPERTIES_und_und"][elem] }
-      self.name = name_fields.join("|")
-      create_source_from_xml xml_source, obj_meta[:components][:child]
+      self.name = get_name(xml_source, obj_meta[:components][:user_key_fields])
+      create_source_from_xml xml_source, obj_meta[:components]
     end
 
     create_indexes
@@ -53,12 +52,14 @@ class ConfigurationObject
       transform_hashs_to_arrays(xml["REPOSITORY"])["PROJECT"].each{ |p| self.source.concat(p[sif_name].map{ |o| o.merge({ "PROJECT" => p["NAME"] }) }) }
     end
 
-    def create_source_from_xml xml_source, child_comp
-      self.source << process_elem(xml_source, child_comp)
+    def create_source_from_xml xml_source, comp
+      self.source << process_elem(xml_source, comp)
     end
 
-    def process_elem xml_source, child_comps
-      xml_source["_sblesc_und_undPROPERTIES_und_und"].merge(process_child(xml_source, child_comps))
+    def process_elem xml_source, comp
+      xml_source["_sblesc_und_undPROPERTIES_und_und"].
+        merge(process_child(xml_source, comp[:child])).
+        merge({ "NAME" => get_name(xml_source, comp[:user_key_fields]) })
     end
 
     def process_child xml_source, child_comps
@@ -68,16 +69,20 @@ class ConfigurationObject
           child_xml = xml_source["ListOf#{comp[:name_xml]}"][comp[:name_xml]]
           
           if child_xml.is_a? Hash
-            nodes = [process_elem(child_xml, comp[:child])]
+            nodes = [process_elem(child_xml, comp)]
           elsif child_xml.is_a? Array
             nodes = []
-            child_xml.each{ |elem| nodes<< process_elem(elem, comp[:child]) }
+            child_xml.each{ |elem| nodes << process_elem(elem, comp) }
           end
 
           child_nodes["#{comp[:name]}"] = nodes
         end
       end
       child_nodes
+    end
+
+    def get_name xml_source, uk_fields
+      uk_fields.map{ |elem| xml_source["_sblesc_und_undPROPERTIES_und_und"][elem] }.join("|")
     end
 
     def transform_hashs_to_arrays obj
@@ -93,7 +98,7 @@ class ConfigurationObject
     end
     
     def delete_system_fields obj
-      obj.reject!{ |e| e["_delete_obj"] }
+      # obj.reject!{ |e| e["_delete_obj"] }
       obj.each do |e|
         e.get_array_attr.each{ |key, value| delete_system_fields value }
         e.reject!{ |key, value| key.start_with?("_") or value.nil? or value.empty? }
