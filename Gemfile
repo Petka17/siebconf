@@ -42,31 +42,34 @@ gem 'jbuilder', '~> 2.0'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+# XSLT 
+gem 'saxon-xslt', '~> 0.5.1'
+
 # Use puma as the app server
 gem 'puma', '~> 2.10.2'
 
+# # Background jobs
+# gem 'sidekiq', '~> 3.3.0'
+# gem 'sinatra', require: false
 
 
 # Background jobs
-gem 'sidekiq', '~> 3.3.0'
-gem 'sinatra', require: false
+gem 'delayed_job_mongoid', '~> 2.1.0'
 
+# For war file
+gem 'jruby-rack-worker', :platform => :jruby, :require => nil
 
 # Use Capistrano for deployment
 group :development do
+  # WAR file creator
+  gem 'warbler', '~> 1.4.5'
 
   gem 'capistrano', '~> 3.2.0'
-  
   gem 'capistrano-rbenv', '~> 2.0'
-
   gem 'capistrano-bundler', '~> 1.1.2'
-
   gem 'capistrano3-puma', '~> 0.8.3'
-
   gem 'capistrano-rails', '~> 1.1.2'
-
   gem 'capistrano-faster-assets', '~> 1.0'
-
   gem 'capistrano-sidekiq', '~> 0.4.0'
 
     # Rails Panel
@@ -75,7 +78,6 @@ group :development do
   # Pry
   gem 'pry-rails', '~> 0.3.2'
   gem 'pry-nav', '~> 0.2.4'
-  # gem 'ruby-debug-pry', '~> 0.0.3'
   gem 'pry-developer_tools', '~> 0.1.1'
   gem 'rack-webconsole-pry', '~> 0.1.9'
   gem 'pry-coolline', '~> 0.2.5'
@@ -83,7 +85,8 @@ group :development do
   gem 'pry-awesome_print', '~> 9.6.9'
 
   gem 'rubocop', require: false
-  
+
+  gem 'jruby-lint', '~> 0.4.1'
 end
 
 

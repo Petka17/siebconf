@@ -49,7 +49,8 @@ Rails.application.routes.draw do
   
   get '/enviroment_logs/:id' => 'workers#get_env_logs'
 
-  mount Sidekiq::Web, at: '/sidekiq'
+  # mount Sidekiq::Web, at: '/sidekiq'
+  # match "/delayed_job" => DelayedJobWeb, :anchor => false, via: [:get, :post]
   
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

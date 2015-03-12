@@ -40,7 +40,7 @@ class SiebelConfigurationsController < ApplicationController
     @siebel_configuration = SiebelConfiguration.create_new_config(siebel_configuration_params)
 
     if @siebel_configuration.save
-      PullWorker.perform_async @siebel_configuration.id.to_s
+      Delayed::Job.enqueue(PullWorker.new(@siebel_configuration.id.to_s))
       flash[:info] = "Pulling process is started"
       redirect_to environment_siebel_configuration_path(@environment, @siebel_configuration)
     else

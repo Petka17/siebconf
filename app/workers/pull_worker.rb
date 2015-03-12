@@ -1,10 +1,6 @@
 # Pull Changes from the environment
-class PullWorker
-  include Sidekiq::Worker
-
-  sidekiq_options retry: false
-
-  def perform(config_id)
+class PullWorker < Struct.new(:config_id) 
+  def perform
     siebel_export = SiebelExport.new(config_id)
 
     siebel_export.index_reset
