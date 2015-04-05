@@ -7,9 +7,6 @@
 # Ignore bundler config.
 /.bundle
 
-# Ignore vagrant
-/.vagrant/*
-
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal
@@ -18,8 +15,14 @@
 /log/*.log
 /tmp
 
+# Vagrant folder
+.vagrant/*
+
+# war file
 *.war
 
-/public/assets
+# Exclude assets
+public/assets/*
 
-*.DS_Store
+# DS_Scope
+*DS_Store
